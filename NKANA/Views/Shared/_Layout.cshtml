@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="aurel_header_gradient_page aurel_content_under_header aurel_non_transparent_header">
+<head>
+    <title>@ViewData["Title"] - NKANA</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700,900" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="~/gallery/css/kube.css">
+    <link rel="stylesheet" href="~/gallery/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/gallery/css/theme.css">
+</head>
+
+
+<body class="aurel_drag_protection aurel_landing_page">
+    <div class="aurel_site_wrapper static_header_footer fadeOnLoad">
+
+        <!-- Header -->
+        <header class="aurel_main_header aurel_logo_left aurel_border_off aurel_header_gradient_style aurel_sticky_menu_on">
+            <div class="aurel_main_header_wrapper">
+                <div class="aurel_header_left_part aurel_header_logo_part">
+                    <div class="aurel_logo_cont">
+                        <a class="aurel_image_logo aurel_dp aurel_no_select aurel_retina" href="/"></a>
+                    </div>
+                </div>
+
+                <div class="aurel_header_middle_part aurel_header_menu_part">
+                    <nav class="aurel_nav">
+                        <ul class="aurel_menu">
+                           @await Component.InvokeAsync("Navbar")
+                            <li class="menu-item-has-children">
+                                <a href="javascript:void(0)">Nature</a>
+
+                                <ul class="sub-menu">
+                                    <li><a href="/">Contacts 01</a></li>
+                                    <li><a href="/">Contacts 02</a></li>
+                                    <li><a href="/">Contacts 03</a></li>
+                                </ul>
+                            </li>
+                            <partial name="_LoginPartial" />
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="aurel_header_right_part aurel_header_socials_part">
+                    <div class="aurel_header_socials">
+                        <a class="aurel_footer_social_button aurel_facebook" href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a>
+                        <a class="aurel_footer_social_button aurel_twitter" href="https://twitter.com/"><i class="fa fa-twitter"></i></a>
+                        <a class="aurel_footer_social_button aurel_instagram" href="https://www.instagram.com/?hl=ru"><i class="fa fa-instagram"></i></a>
+                        <a class="aurel_footer_social_button aurel_pinterest" href="https://pinterest.com/"><i class="fa fa-pinterest"></i></a>
+                        <a class="aurel_toogle_fullview" href="javascript:void(0)">
+                            <span class="aurel_fullview_block01"></span>
+                            <span class="aurel_fullview_block02"></span>
+                            <span class="aurel_fullview_block03"></span>
+                            <span class="aurel_fullview_block04"></span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Logo Mobile -->
+                <div class="aurel_header_mobile_logo">
+                    <div class="aurel_logo_cont">
+                        <a href="/" class="aurel_image_logo aurel_dp aurel_no_select aurel_retina"></a>
+                    </div>
+                </div>
+
+                <a class="aurel_header_mobile_menu_toggler" href="javascript:void(0)">
+                    <span class="aurel_mmt_icon">
+                        <span class="aurel_mmt_line01"></span>
+                        <span class="aurel_mmt_line02"></span>
+                        <span class="aurel_mmt_line03"></span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="aurel_mobile_menu_wrapper">
+                <div class="aurel_header_socials">
+                    <a class="aurel_footer_social_button aurel_facebook" href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a>
+                    <a class="aurel_footer_social_button aurel_twitter" href="https://twitter.com/"><i class="fa fa-twitter"></i></a>
+                    <a class="aurel_footer_social_button aurel_instagram" href="https://www.instagram.com/?hl=ru"><i class="fa fa-instagram"></i></a>
+                    <a class="aurel_footer_social_button aurel_pinterest" href="https://pinterest.com/"><i class="fa fa-pinterest"></i></a>
+                    <a class="aurel_toogle_fullview" href="javascript:void(0)">
+                        <span class="aurel_fullview_block01"></span>
+                        <span class="aurel_fullview_block02"></span>
+                        <span class="aurel_fullview_block03"></span>
+                        <span class="aurel_fullview_block04"></span>
+                    </a>
+                </div>
+
+                <nav class="aurel_mobile_nav">
+                    <ul class="aurel_menu">
+                        @await Component.InvokeAsync("NavbarMobile")
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        @RenderBody()
+        
+
+        <!-- Footer -->
+        <footer class="aurel_footer aurel_border_off">
+            <div class="aurel_footer_inner aurel_container">
+                <div class="aurel_logo_cont">
+                    <a href="/" class="aurel_image_logo aurel_dp aurel_no_select aurel_retina"></a>
+                </div>
+
+                <div class="aurel_copyright">© @DateTime.Now.Year Africhina. All Rights Reserved.</div>
+            </div>
+        </footer>
+
+        <!-- Back Button -->
+        <div class="aurel_back_to_top"></div>
+    </div>
+
+    <!-- Preloader -->
+    <div class="aurel_preloader_wrapper">
+        <div class="aurel_preloader_content">
+            <div class="aurel_preloader_bar"></div>
+            <h6 class="aurel_preloader_text">LOADING</h6>
+        </div>
+    </div>
+
+    <!-- JS Files -->
+    <script src="~/gallery/js/jquery.min.js"></script>
+    <script src="~/gallery/js/jquery.swipebox.js"></script>
+    <script src="~/gallery/js/jquery.fullscreen.min.js"></script>
+    <script src="~/gallery/js/owl.carousel.min.js"></script>
+    <script src="~/gallery/js/parallax.js"></script>
+    <script src="~/gallery/js/imagesloaded.pkgd.min.js"></script>
+    <script src="~/gallery/js/isotope.pkgd.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/gallery/js/theme.js"></script>
+</body>
+</html>
