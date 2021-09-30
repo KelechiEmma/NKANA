@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity; using NKANA.Models;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NKANA.Data;
-using NKANA.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace NKANA
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            //CreateUsersAndRoles(services);
+            CreateUsersAndRoles(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,7 +78,7 @@ namespace NKANA
             });
         }
 
-        private static void CreateUsersAndRoles(IServiceCollection services)
+        private async Task CreateUsersAndRoles(IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
             var userManager = serviceProvider.GetRequiredService<UserManager<NkanaUser>>();
@@ -91,27 +90,27 @@ namespace NKANA
                 new IdentityRole{ Name = "Artist" },
                 new IdentityRole{ Name = "SuperAdmin" }
             };
-
+            
             foreach (var role in roles)
             {
-                roleManager.CreateAsync(role);
+                await roleManager.CreateAsync(role);
             }
 
             var users = new List<NkanaUser>
             {
-                new NkanaUser{ UserName = "Admin", NormalizedUserName = "ADMIN", NormalizedEmail = "ADMIN@ACDTE.COM", Email = "admin@acdte.com", EmailConfirmed = true },
-                new NkanaUser{ UserName = "SuperAdmin", NormalizedUserName = "SUPERADMIN", NormalizedEmail = "SUPERADMIN@ACDTE.COM", Email = "superadmin@acdte.com", EmailConfirmed = true },
-                new NkanaUser{ UserName = "System", NormalizedUserName = "SYSTEM", NormalizedEmail = "SYSTEM@ACDTE.COM", Email = "system@acdte.com", EmailConfirmed = true },
-                new NkanaUser{ UserName = "Africhina", NormalizedUserName = "AFRICHINA", NormalizedEmail = "AFRICHINA@ACDTE.COM", Email = "africhina@acdte.com", EmailConfirmed = true },
+                new NkanaUser{ Id = "4f974cf1-bc02-4aa7-bede-69a91d0e771d", UserName = "Admin", NormalizedUserName = "ADMIN", NormalizedEmail = "ADMIN@ACDTE.COM", Email = "admin@acdte.com", EmailConfirmed = true },
+                new NkanaUser{ Id = "0e20a2de-342e-4b9d-a153-1c180e7f6435", UserName = "SuperAdmin", NormalizedUserName = "SUPERADMIN", NormalizedEmail = "SUPERADMIN@ACDTE.COM", Email = "superadmin@acdte.com", EmailConfirmed = true },
+                new NkanaUser{ Id = "1135f23e-2eaf-44ef-830d-fcafce7b94ae", UserName = "System", NormalizedUserName = "SYSTEM", NormalizedEmail = "SYSTEM@ACDTE.COM", Email = "system@acdte.com", EmailConfirmed = true },
+                new NkanaUser{ Id = "1135f23e-44ef-2eaf-830d-7b94aefcafce", UserName = "Africhina", NormalizedUserName = "AFRICHINA", NormalizedEmail = "AFRICHINA@ACDTE.COM", Email = "africhina@acdte.com", EmailConfirmed = true },
             };
 
             var passwords = new string[] { "greenadmin@Fdt122", "FindingSpaces&Trees", "Stranded@001", "level12#Goose" };
             for (int i = 0; i < users.Count; i++)
             {
-                var result = userManager.CreateAsync(users[i], passwords[i]).GetAwaiter().GetResult();
+                var result = await userManager.CreateAsync(users[i], passwords[i]);
                 if (result.Succeeded)
                 {
-                    userManager.AddToRolesAsync(users[i], new string[] { "Admin", "SuperAdmin" });
+                    await userManager.AddToRolesAsync(users[i], new string[] { "Admin", "SuperAdmin" });
                 }
             }
         }
