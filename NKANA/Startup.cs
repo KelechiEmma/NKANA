@@ -41,7 +41,7 @@ namespace NKANA
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            CreateUsersAndRoles(services);
+            CreateUsersAndRoles(services).Wait();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +78,7 @@ namespace NKANA
             });
         }
 
-        private async Task CreateUsersAndRoles(IServiceCollection services)
+        private async Task<bool> CreateUsersAndRoles(IServiceCollection services)
         {
             var serviceProvider = services.BuildServiceProvider();
             var userManager = serviceProvider.GetRequiredService<UserManager<NkanaUser>>();
@@ -113,6 +113,8 @@ namespace NKANA
                     await userManager.AddToRolesAsync(users[i], new string[] { "Admin", "SuperAdmin" });
                 }
             }
+
+            return true;
         }
     }
 }
