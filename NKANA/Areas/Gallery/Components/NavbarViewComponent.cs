@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NKANA.Extensions;
 
 namespace NKANA.Areas.Gallery.Components
 {
@@ -19,7 +20,7 @@ namespace NKANA.Areas.Gallery.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            return View(this.GetViewPath("Gallery"));
         }
     }
 }

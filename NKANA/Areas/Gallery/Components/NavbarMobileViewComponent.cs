@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NKANA.Data;
+using NKANA.Extensions;
 using System.Threading.Tasks;
 
 namespace NKANA.Areas.Gallery.Components
@@ -16,7 +17,7 @@ namespace NKANA.Areas.Gallery.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View();
+            return View(this.GetViewPath("Gallery"));
         }
     }
 }
