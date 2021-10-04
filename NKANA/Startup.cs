@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace NKANA
 {
@@ -32,16 +34,28 @@ namespace NKANA
                 o.EnableEndpointRouting = false;
             });
 
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.LoginPath = new PathString("/Identity/Account/login");
+                x.AccessDeniedPath = new PathString("/Identity/Account/AccessDenied");
+            });
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddIdentity<NkanaUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddIdentity<NkanaUser, IdentityRole>(options => {
+                options.SignIn.RequireConfirmedAccount = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
-            CreateUsersAndRoles(services).Wait();
+            //CreateUsersAndRoles(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,9 +100,9 @@ namespace NKANA
 
             var roles = new List<IdentityRole>
             {
-                new IdentityRole{ Name = "Admin" },
-                new IdentityRole{ Name = "Artist" },
-                new IdentityRole{ Name = "SuperAdmin" }
+                new IdentityRole{ Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole{ Name = "Artist", NormalizedName = "ARTIST" },
+                new IdentityRole{ Name = "SuperAdmin", NormalizedName = "SUPERADMIN" }
             };
             
             foreach (var role in roles)
@@ -107,6 +121,8 @@ namespace NKANA
             var passwords = new string[] { "greenadmin@Fdt122", "FindingSpaces&Trees", "Stranded@001", "level12#Goose" };
             for (int i = 0; i < users.Count; i++)
             {
+                //if (await userManager.FindByIdAsync(users[i].Id) != null) continue;
+
                 var result = await userManager.CreateAsync(users[i], passwords[i]);
                 if (result.Succeeded)
                 {

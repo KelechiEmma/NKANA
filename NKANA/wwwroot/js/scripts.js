@@ -25,6 +25,10 @@ $(function() {
     }, 100);
 });
 
+window.deleteItem = function (id) {
+    window.location = window.location + '/Delete/' + id;
+}
+
 // Basic confirm box
 $('[data-confirm]').each(function() {
     var me = $(this),
@@ -426,30 +430,42 @@ $("[data-collapse]").each(function() {
 });
 
 // Gallery
-$(".gallery .gallery-item").each(function() {
-    var me = $(this);
+    function initializeGallery() {
+        $(".gallery .gallery-item").each(function () {
+            var me = $(this);
 
-    me.attr('href', me.data('image'));
-    me.attr('title', me.data('title'));
-    if(me.parent().hasClass('gallery-fw')) {
-    me.css({
-        height: me.parent().data('item-height'),
-    });
-    me.find('div').css({
-        lineHeight: me.parent().data('item-height') + 'px'
-    });
+            me.attr('href', me.data('image'));
+            me.attr('title', me.data('title'));
+            if (me.parent().hasClass('gallery-fw')) {
+                me.css({
+                    height: me.parent().data('item-height'),
+                });
+                me.find('div').css({
+                    lineHeight: me.parent().data('item-height') + 'px'
+                });
+            }
+            me.css({
+                backgroundImage: 'url("' + me.data('image') + '")'
+            });
+        });
     }
-    me.css({
-        backgroundImage: 'url("'+ me.data('image') +'")'
-    });
-});
+    initializeGallery()
 if(jQuery().Chocolat) { 
-    $(".gallery").Chocolat({
-        className: 'gallery',
-        imageSelector: '.gallery-item',
-    });
+    //$(".gallery").Chocolat({
+    //    className: 'gallery',
+    //    imageSelector: '.gallery-item',
+    //});
 }
 
+    $(".preview-thumbnail").change(function (e) {
+        var thumbnailPreviewUrl = URL.createObjectURL(e.target.files[0])
+        
+        var body = `<div class="form-group"><div class="gallery">
+                                <div class="gallery-item" data-image="${thumbnailPreviewUrl}" data-title="Image" data-item-height="100%"></div>
+                            </div></div>`
+        $(this).parent().append(body)
+        initializeGallery()
+    })
 // Background
 $("[data-background]").each(function() {
     var me = $(this);

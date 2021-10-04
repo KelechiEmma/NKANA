@@ -13,7 +13,7 @@ using NKANA.Models;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin,SuperAdmin")]
     public class ArtistSkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -131,30 +131,8 @@ namespace NKANA.Areas.Dashboard.Controllers
             return View(artistSkill);
         }
 
-        // GET: Dashboard/ArtistSkills/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var artistSkill = await _context.ArtistSkills
-                .Include(a => a.Artist)
-                .Include(a => a.Skill)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (artistSkill == null)
-            {
-                return NotFound();
-            }
-
-            return View(artistSkill);
-        }
-
-        // POST: Dashboard/ArtistSkills/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(long id)
         {
             var artistSkill = await _context.ArtistSkills.FindAsync(id);
             _context.ArtistSkills.Remove(artistSkill);

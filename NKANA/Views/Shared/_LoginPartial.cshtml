@@ -2,7 +2,6 @@
 @inject SignInManager<NkanaUser> SignInManager
 @inject UserManager<NkanaUser> UserManager
 
-<ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="menu-item-has-children">
@@ -11,7 +10,6 @@
         <li class="menu-item-has-children">
             <a asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Logout</a>
         </li>
-
     }
     else
     {
@@ -22,4 +20,4 @@
             <a asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
-</ul>
+

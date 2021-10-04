@@ -1,5 +1,3 @@
-using System;
-
 namespace NKANA.ViewModels
 {
     public class ErrorViewModel

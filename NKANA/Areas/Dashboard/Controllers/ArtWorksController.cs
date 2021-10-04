@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.ViewModels;
 
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin,SuperAdmin")]
     public class ArtWorksController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -24,10 +25,15 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/ArtWorks
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var applicationDbContext = _context.ArtWorks.Include(a => a.Artist);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.ArtWorks.Select(x => new ArtWorkListVm
+            {
+                Id = x.Id,
+                Title = x.Title,
+                ThumbnailUrl = x.ThumnailImage
+            });
+            return View(applicationDbContext);
         }
 
         // GET: Dashboard/ArtWorks/Details/5
@@ -46,13 +52,24 @@ namespace NKANA.Areas.Dashboard.Controllers
                 return NotFound();
             }
 
-            return View(artWork);
+            var vm = new ArtWorkDetailsVm
+            {
+                Id = artWork.Id,
+                Title = artWork.Title,
+                ThumbnailUrl = artWork.ThumnailImage,
+                Artist = artWork.Artist.Name,
+                DateCreated = artWork.DateCreated,
+                Description = artWork.Description,
+                ImagesUrl = artWork.ArtWorkMedias.Where(x => x.Media.MediaType == MediaType.Image)
+                .Select(x => x.Media.MediaUrl)
+            };
+            return View(vm);
         }
 
         // GET: Dashboard/ArtWorks/Create
         public IActionResult Create()
         {
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id");
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Name");
             return View();
         }
 
@@ -61,16 +78,19 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,ArtistId,Description,ThumnailImage,DateCreated")] ArtWork artWork)
+        public async Task<IActionResult> Create([Bind("Title,ArtistId,Description,ThumbnailImage,OtherImages")] ArtWorkFormVm artWorkVm)
         {
             if (ModelState.IsValid)
             {
+                ArtWork artWork = new ArtWork();
                 _context.Add(artWork);
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", artWork.ArtistId);
-            return View(artWork);
+
+            ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", artWorkVm.ArtistId);
+            return View(artWorkVm);
         }
 
         // GET: Dashboard/ArtWorks/Edit/5
@@ -125,30 +145,8 @@ namespace NKANA.Areas.Dashboard.Controllers
             ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Id", artWork.ArtistId);
             return View(artWork);
         }
-
-        // GET: Dashboard/ArtWorks/Delete/5
-        public async Task<IActionResult> Delete(long? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var artWork = await _context.ArtWorks
-                .Include(a => a.Artist)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (artWork == null)
-            {
-                return NotFound();
-            }
-
-            return View(artWork);
-        }
-
-        // POST: Dashboard/ArtWorks/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(long id)
         {
             var artWork = await _context.ArtWorks.FindAsync(id);
             _context.ArtWorks.Remove(artWork);

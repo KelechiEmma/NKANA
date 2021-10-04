@@ -13,7 +13,7 @@ using NKANA.Models;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class SkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
