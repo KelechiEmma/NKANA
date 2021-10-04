@@ -9,10 +9,4 @@ namespace NKANA.Models
         public string MediaUrl { get; set; }
         public ICollection<ArtWorkMedia> ArtWorkMedias { get; set; }
     }
-    public enum MediaType
-    {
-        Image,
-
-        Other
-    }
 }

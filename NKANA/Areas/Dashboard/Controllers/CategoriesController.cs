@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using NKANA.Data;
 using NKANA.Models;
+using static System.Net.WebRequestMethods;
 
 namespace NKANA.Areas.Dashboard.Controllers
 {
@@ -68,15 +69,8 @@ namespace NKANA.Areas.Dashboard.Controllers
             if (ModelState.IsValid)
             {
                 if (ThumnailImage != null)
-                {
-                    string relativeLocation = $"/img/categories/{Guid.NewGuid()}{Path.GetExtension(ThumnailImage.FileName)}";
-                    string fileLocation = _environment.WebRootPath + relativeLocation;
-                    category.ThumnailImage = relativeLocation;
-
-                    using (var output = new FileStream(fileLocation, FileMode.Create))
-                    {
-                        await ThumnailImage.OpenReadStream().CopyToAsync(output);
-                    }
+{
+                    category.ThumnailImage = await SaveFile(ThumnailImage);
                 }
 
                 _context.Add(category);
@@ -123,20 +117,12 @@ namespace NKANA.Areas.Dashboard.Controllers
                     {
                         if (ThumnailImage != null)
                         {
-                            string relativeLocation = $"/img/categories/{Guid.NewGuid()}{Path.GetExtension(ThumnailImage.FileName)}";
-                            string fileLocation = _environment.WebRootPath + relativeLocation;
-                            ct.ThumnailImage = relativeLocation;
-
-                            using (var output = new FileStream(fileLocation, FileMode.Create))
-                            {
-                                await ThumnailImage.OpenReadStream().CopyToAsync(output);
-                            }
+                            ct.ThumnailImage = await SaveFile(ThumnailImage);
                         }
-
-                        ct.Name = category.Name;
-                        _context.Update(category);
-                        await _context.SaveChangesAsync();
                     }
+                    ct.Name = category.Name;
+                    _context.Update(category);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,6 +148,18 @@ namespace NKANA.Areas.Dashboard.Controllers
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string> SaveFile(IFormFile file)
+        {
+            string relativeLocation = $"/img/categories/{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            string fileLocation = _environment.WebRootPath + relativeLocation;
+            
+            using (var output = new FileStream(fileLocation, FileMode.Create))
+            {
+                await file.OpenReadStream().CopyToAsync(output);
+            }
+            return relativeLocation; ;
         }
 
         private bool CategoryExists(long id)

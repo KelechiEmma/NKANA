@@ -22,7 +22,6 @@
                     <div class="card-header">
                         <h4>Add Artwork</h4>
                     </div>
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <form asp-action="Create" enctype="multipart/form-data">
                         <div class="card-body">
                             <div class="text-danger" asp-validation-summary="All"> </div>
@@ -47,9 +46,6 @@
                             <div class="form-group">
                                 <label asp-for="OtherImages">Other Images</label>
                                 <input type="file" asp-for="OtherImages" multiple class="form-control">
-                            </div>
-                            <div class="gallery">
-                                <div class="gallery-item" data-image="/img/news/img08.jpg" data-title="Image"></div>
                             </div>
                         </div>
                         <div class="card-footer text-right">
