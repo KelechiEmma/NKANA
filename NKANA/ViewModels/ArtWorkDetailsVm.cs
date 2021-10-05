@@ -10,6 +10,7 @@ namespace NKANA.ViewModels
         public string Title { get; set; }
         public string ThumbnailUrl { get; set; }
         public string Artist { get; set; }
+        public decimal Price { get; set; }
         public IEnumerable<string> ImagesUrl { get; set; }
         public string Description { get; set; }
     }

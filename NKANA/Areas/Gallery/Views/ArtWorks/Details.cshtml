@@ -1,48 +1,70 @@
-﻿@model NKANA.Models.ArtWork
+﻿@model NKANA.ViewModels.ArtWorkDetailsVm
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
+}
+@section Styles{
+    <link rel="stylesheet" href="~/gallery/css/photoswipe.css">
 }
 
-<h1>Details</h1>
+<!-- Content -->
+<div class="aurel_main_wrapper aurel_top_padding_yes aurel_bottom_padding_yes">
+    <div class="aurel_container">
+        <div class="aurel_content_wrapper row aurel_left_sidebar">
+            <!-- Content Container -->
+            <div class="aurel_content col9">
+                <div class="aurel_tiny">
+                    <div class="aurel_widget_pm_blog_listing">
+                        <div class="aurel_widget_container">
+                            <div class="aurel_front_end_display">
+                                <div class="aurel_blog_wrapper aurel_element_blog blog_type_standard">
+                                    <!-- Item 1 -->
+                                    <div class="standard_post_item">
+                                        <div class="aurel_post_formats aurel_pf_gallery aurel_pf_boxed">
+                                            <div class="aurel_pf_gallery aurel_pf_gallery3 aurel_photoswipe_wrapper" data-uniqid="015">
+                                                @for (int i = 0; i < Model.ImagesUrl.Count(); i++)
+                                                {
+                                                    <div class="aurel_pf_gallery_item">
+                                                        <a rel="pf_grid_gallery156" href="@Model.ImagesUrl.ElementAt(i)" class="aurel_pswp_slide aurel_dp aurel_no_select" data-size="1920x1280" data-count="@i">
+                                                            <img src="@Model.ImagesUrl.ElementAt(i)" alt="image-@i" />
+                                                        </a>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
 
-<div>
-    <h4>ArtWork</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Artist)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Artist.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThumnailImage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThumnailImage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-    </dl>
+                                        <div class="aurel_post_meta">
+                                            <div class="aurel_post_meta_item">@Model.DateCreated.ToString()</div>
+                                            <div class="aurel_post_meta_item">
+                                                <a href="javascript:void(0)" rel="category tag">@Model.Artist</a>
+                                            </div>
+                                        </div>
+
+                                        <h2 class="aurel_post_listing_title">
+                                            <a href="javascript:void(0)">@Model.Title</a>
+                                        </h2>
+
+                                        <div class="aurel_excerpt">
+                                            @Model.Description
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Container -->
+            <div class="aurel_sidebar col3 first">
+              
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@section Scripts{
+    <script src="~/gallery/js/photoswipe.min.js"></script>
+    <script src="~/gallery/js/photoswipe-ui-default.min.js"></script>
+}

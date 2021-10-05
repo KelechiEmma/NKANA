@@ -194,20 +194,6 @@ namespace NKANA.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medias",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MediaType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MediaUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Medias", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Skills",
                 columns: table => new
                 {
@@ -274,14 +260,13 @@ namespace NKANA.Data.Migrations
                 name: "ArtistSkills",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     ArtistId = table.Column<long>(type: "bigint", nullable: false),
-                    SkillId = table.Column<long>(type: "bigint", nullable: false)
+                    SkillId = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtistSkills", x => x.Id);
+                    table.PrimaryKey("PK_ArtistSkills", x => new { x.ArtistId, x.SkillId });
                     table.ForeignKey(
                         name: "FK_ArtistSkills_Artists_ArtistId",
                         column: x => x.ArtistId,
@@ -300,14 +285,13 @@ namespace NKANA.Data.Migrations
                 name: "ArtWorkCategories",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     ArtWorkId = table.Column<long>(type: "bigint", nullable: false),
-                    CategoryId = table.Column<long>(type: "bigint", nullable: false)
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtWorkCategories", x => x.Id);
+                    table.PrimaryKey("PK_ArtWorkCategories", x => new { x.CategoryId, x.ArtWorkId });
                     table.ForeignKey(
                         name: "FK_ArtWorkCategories_ArtWorks_ArtWorkId",
                         column: x => x.ArtWorkId,
@@ -323,27 +307,21 @@ namespace NKANA.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ArtWorkMedias",
+                name: "ArtWorkImages",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ArtWorkId = table.Column<long>(type: "bigint", nullable: false),
-                    MediaId = table.Column<long>(type: "bigint", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtWorkMedias", x => x.Id);
+                    table.PrimaryKey("PK_ArtWorkImages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ArtWorkMedias_ArtWorks_ArtWorkId",
+                        name: "FK_ArtWorkImages_ArtWorks_ArtWorkId",
                         column: x => x.ArtWorkId,
                         principalTable: "ArtWorks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ArtWorkMedias_Medias_MediaId",
-                        column: x => x.MediaId,
-                        principalTable: "Medias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -378,11 +356,6 @@ namespace NKANA.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArtistSkills_ArtistId",
-                table: "ArtistSkills",
-                column: "ArtistId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ArtistSkills_SkillId",
                 table: "ArtistSkills",
                 column: "SkillId");
@@ -393,19 +366,9 @@ namespace NKANA.Data.Migrations
                 column: "ArtWorkId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ArtWorkCategories_CategoryId",
-                table: "ArtWorkCategories",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtWorkMedias_ArtWorkId",
-                table: "ArtWorkMedias",
+                name: "IX_ArtWorkImages_ArtWorkId",
+                table: "ArtWorkImages",
                 column: "ArtWorkId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ArtWorkMedias_MediaId",
-                table: "ArtWorkMedias",
-                column: "MediaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ArtWorkRequests_ArtWorkId",
@@ -504,7 +467,7 @@ namespace NKANA.Data.Migrations
                 name: "ArtWorkCategories");
 
             migrationBuilder.DropTable(
-                name: "ArtWorkMedias");
+                name: "ArtWorkImages");
 
             migrationBuilder.DropTable(
                 name: "ArtWorkRequests");
@@ -517,9 +480,6 @@ namespace NKANA.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Medias");
 
             migrationBuilder.DropTable(
                 name: "ArtWorks");

@@ -11,6 +11,7 @@ namespace NKANA.Areas.Dashboard.Controllers
     //[Authorize(Roles = ("Admin,SuperAdmin")]
     public class DashboardController : Controller
     {
+        [HttpGet("dashboard")]
         public IActionResult Index()
         {
             return View();

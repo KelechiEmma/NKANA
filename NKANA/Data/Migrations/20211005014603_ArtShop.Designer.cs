@@ -10,7 +10,7 @@ using NKANA.Data;
 namespace NKANA.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210928162716_Art-Shop")]
+    [Migration("20211005014603_ArtShop")]
     partial class ArtShop
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -248,27 +248,23 @@ namespace NKANA.Data.Migrations
 
             modelBuilder.Entity("NKANA.Models.ArtWorkCategory", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("ArtWorkId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CategoryId")
+                    b.Property<long>("Id")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId", "ArtWorkId");
 
                     b.HasIndex("ArtWorkId");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("ArtWorkCategories");
                 });
 
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -278,16 +274,14 @@ namespace NKANA.Data.Migrations
                     b.Property<long>("ArtWorkId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("MediaId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ArtWorkId");
 
-                    b.HasIndex("MediaId");
-
-                    b.ToTable("ArtWorkMedias");
+                    b.ToTable("ArtWorkImages");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
@@ -343,20 +337,16 @@ namespace NKANA.Data.Migrations
 
             modelBuilder.Entity("NKANA.Models.ArtistSkill", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<long>("ArtistId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("SkillId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("ArtistId");
+                    b.HasKey("ArtistId", "SkillId");
 
                     b.HasIndex("SkillId");
 
@@ -379,24 +369,6 @@ namespace NKANA.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MediaType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MediaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medias");
                 });
 
             modelBuilder.Entity("NKANA.Models.NkanaUser", b =>
@@ -553,23 +525,15 @@ namespace NKANA.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
                 {
                     b.HasOne("NKANA.Models.ArtWork", "ArtWork")
-                        .WithMany("ArtWorkMedias")
+                        .WithMany("ArtWorkImages")
                         .HasForeignKey("ArtWorkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NKANA.Models.Media", "Media")
-                        .WithMany("ArtWorkMedias")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ArtWork");
-
-                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
@@ -614,7 +578,7 @@ namespace NKANA.Data.Migrations
                 {
                     b.Navigation("ArtWorkCategories");
 
-                    b.Navigation("ArtWorkMedias");
+                    b.Navigation("ArtWorkImages");
                 });
 
             modelBuilder.Entity("NKANA.Models.Artist", b =>
@@ -627,11 +591,6 @@ namespace NKANA.Data.Migrations
             modelBuilder.Entity("NKANA.Models.Category", b =>
                 {
                     b.Navigation("ArtWorkCategories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Navigation("ArtWorkMedias");
                 });
 
             modelBuilder.Entity("NKANA.Models.Skill", b =>

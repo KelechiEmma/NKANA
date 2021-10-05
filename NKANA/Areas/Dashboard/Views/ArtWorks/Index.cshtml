@@ -17,6 +17,7 @@
     <div class="section-body">
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
+
                 <div class="card">
                     <div class="card-header">
                         <h4>Gallery</h4>
@@ -25,11 +26,19 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="gallery">
-                            @foreach (var item in Model)
-                            {
-                                <div class="gallery-item gallery-more" data-image="@item.ThumbnailUrl" data-title="@item.Title"><div><a asp-action="Details" asp-route-id="@item.Id">view</a></div></div>
-                            }
+                        <div class="form-group">
+                            <div class="row gutters-sm">
+                                @foreach (var item in Model)
+                                {
+                                    <div class="col-6 col-sm-4 col-md-3">
+                                        <label class="imagecheck mb-4 artwork" data-id="@item.Id">
+                                            <figure class="imagecheck-figure">
+                                                <img src="@item.ThumbnailUrl" alt="@item.Title" class="imagecheck-image">
+                                            </figure>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>

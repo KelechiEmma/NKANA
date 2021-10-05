@@ -43,7 +43,7 @@ namespace NKANA.Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -67,7 +67,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("AspNetRoleClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
@@ -156,7 +156,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("AspNetUserClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -178,7 +178,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogins");
+                    b.ToTable("AspNetUserLogins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -193,7 +193,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -212,7 +212,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWork", b =>
@@ -231,6 +231,12 @@ namespace NKANA.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("ThumnailImage")
                         .HasColumnType("nvarchar(max)");
 
@@ -246,27 +252,23 @@ namespace NKANA.Data.Migrations
 
             modelBuilder.Entity("NKANA.Models.ArtWorkCategory", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("ArtWorkId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("CategoryId")
+                    b.Property<long>("Id")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId", "ArtWorkId");
 
                     b.HasIndex("ArtWorkId");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("ArtWorkCategories");
                 });
 
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -276,16 +278,14 @@ namespace NKANA.Data.Migrations
                     b.Property<long>("ArtWorkId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("MediaId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ArtWorkId");
 
-                    b.HasIndex("MediaId");
-
-                    b.ToTable("ArtWorkMedias");
+                    b.ToTable("ArtWorkImages");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
@@ -297,6 +297,9 @@ namespace NKANA.Data.Migrations
 
                     b.Property<long>("ArtWorkId")
                         .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Message")
                         .IsRequired()
@@ -341,20 +344,16 @@ namespace NKANA.Data.Migrations
 
             modelBuilder.Entity("NKANA.Models.ArtistSkill", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<long>("ArtistId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("SkillId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("ArtistId");
+                    b.HasKey("ArtistId", "SkillId");
 
                     b.HasIndex("SkillId");
 
@@ -377,24 +376,6 @@ namespace NKANA.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MediaType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MediaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medias");
                 });
 
             modelBuilder.Entity("NKANA.Models.NkanaUser", b =>
@@ -452,7 +433,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("NKANA.Models.Skill", b =>
@@ -551,23 +532,15 @@ namespace NKANA.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
                 {
                     b.HasOne("NKANA.Models.ArtWork", "ArtWork")
-                        .WithMany("ArtWorkMedias")
+                        .WithMany("ArtWorkImages")
                         .HasForeignKey("ArtWorkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NKANA.Models.Media", "Media")
-                        .WithMany("ArtWorkMedias")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ArtWork");
-
-                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
@@ -578,7 +551,7 @@ namespace NKANA.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("NKANA.Models.NkanaUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -612,7 +585,7 @@ namespace NKANA.Data.Migrations
                 {
                     b.Navigation("ArtWorkCategories");
 
-                    b.Navigation("ArtWorkMedias");
+                    b.Navigation("ArtWorkImages");
                 });
 
             modelBuilder.Entity("NKANA.Models.Artist", b =>
@@ -625,11 +598,6 @@ namespace NKANA.Data.Migrations
             modelBuilder.Entity("NKANA.Models.Category", b =>
                 {
                     b.Navigation("ArtWorkCategories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Navigation("ArtWorkMedias");
                 });
 
             modelBuilder.Entity("NKANA.Models.Skill", b =>

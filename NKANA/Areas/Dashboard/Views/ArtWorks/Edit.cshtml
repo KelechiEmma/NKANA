@@ -1,54 +1,125 @@
-﻿@model NKANA.Models.ArtWork
+﻿@model NKANA.ViewModels.ArtWorkFormVm
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit ArtWork";
 }
 
-<h1>Edit</h1>
-
-<h4>ArtWork</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArtistId" class="control-label"></label>
-                <select asp-for="ArtistId" class="form-control" asp-items="ViewBag.ArtistId"></select>
-                <span asp-validation-for="ArtistId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThumnailImage" class="control-label"></label>
-                <input asp-for="ThumnailImage" class="form-control" />
-                <span asp-validation-for="ThumnailImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
-                <span asp-validation-for="DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css">
+<section class="section">
+    <div class="section-header">
+        <h1>Artwork</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+            <div class="breadcrumb-item">Edit<a href="#">Artworks</a></div>
+            <div class="breadcrumb-item"></div>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="section-body">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Edit Artwork</h4>
+                    </div>
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="text-danger" asp-validation-summary="All"> </div>
+                            <div class="form-group">
+                                <label asp-for="Title"></label>
+                                <input asp-for="Title" class="form-control">
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ArtistId">Artist</label>
+                                <select class="form-control selectric" asp-for="ArtistId" asp-items="ViewBag.ArtistId"></select>
+
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Price"></label>
+                                <input asp-for="Price" class="form-control">
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Description"></label>
+                                <textarea class="summernote-simple" asp-for="Description"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ThumbnailImage">Thumbnail</label>
+                                <input type="file" asp-for="ThumbnailImage" class="form-control preview-thumbnail">
+                            </div>
+                            <div class="form-group hide">
+                                <label class="imagecheck mb-4">
+                                    <input name="imagecheck" type="checkbox" value=".Id" class="imagecheck-input" />
+                                    <figure class="imagecheck-figure">
+                                        <img src="@Model.ThumbnailUrl" alt="Title" class="imagecheck-image">
+                                    </figure>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="OtherImages">Other Images</label>
+                                <input type="file" asp-for="OtherImages" multiple class="form-control preview-images">
+                            </div>
+                            @if (Model.ImagesUrl != null && Model.ImagesUrl.Any())
+                            {
+                                <div class="form-group mt-5 prev-body">
+                                    <div class="row gutters-sm">
+                                        @foreach (var item in Model.ImagesUrl)
+                                        {
+                                            <div class="col-6 col-sm-4 col-md-3">
+                                                <label class="imagecheck mb-4">
+                                                    <input name="imagecheck" type="checkbox" value=".Id" class="imagecheck-input" />
+                                                    <figure class="imagecheck-figure">
+                                                        <img src="@item" alt="Title" class="imagecheck-image">
+                                                    </figure>
+                                                </label>
+                                            </div>
+
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="d-block" asp-for="Categories"></label>
+                                @if (Model.Categories != null)
+                                {
+                                    foreach (var cat in Model.Categories)
+                                    {
+                                        <div class="form-check-inline">
+                                            @if (Model.ArtWorkCategories != null && Model.ArtWorkCategories.Contains(cat.Id))
+                                            {
+                                                <input class="form-check-input" type="checkbox" value="@cat.Id" name="ArtWorkCategories[]" checked>
+                                            }
+                                            else
+                                            {
+                                                <input class="form-check-input" type="checkbox" value="@cat.Id" name="ArtWorkCategories[]">
+                                            }
+                                            <label class="form-check-label" asp-for="ArtWorkCategories">@cat.Name</label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check-inline">
+                                    <input class="form-check-input" type="checkbox" asp-for="IsFeatured">
+                                    <label class="form-check-label" asp-for="IsFeatured"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary mr-1" type="submit">Update</button>
+                            <a class="btn btn-danger btn-action" data-toggle="tooltip" asp-action="Delete" asp-route-id="@Model.Id" title="Delete" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="deleteFromEdit(@Model.Id)">Delete</a>
+                            <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 @section Scripts {
+    <script src="~/lib/summernote/summernote-bs4.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -29,6 +29,10 @@ window.deleteItem = function (id) {
     window.location = window.location + '/Delete/' + id;
 }
 
+window.deleteFromEdit = function (id) {
+    var l = window.location.href
+    window.location = l.replace("Edit", "Delete")
+}
 // Basic confirm box
 $('[data-confirm]').each(function() {
     var me = $(this),
@@ -460,12 +464,37 @@ if(jQuery().Chocolat) {
     $(".preview-thumbnail").change(function (e) {
         var thumbnailPreviewUrl = URL.createObjectURL(e.target.files[0])
         
-        var body = `<div class="form-group"><div class="gallery">
-                                <div class="gallery-item" data-image="${thumbnailPreviewUrl}" data-title="Image" data-item-height="100%"></div>
-                            </div></div>`
+        var body = `<div class="form-group">
+                                <label class="imagecheck mb-4">
+                                    <figure class="imagecheck-figure">
+                                        <img src="${thumbnailPreviewUrl}" alt="Title" class="imagecheck-image">
+                                    </figure>
+                                </label>
+                            </div>`
         $(this).parent().append(body)
-        initializeGallery()
     })
+    $(".preview-images").change(function (e) {
+        var pre = `<div class="form-group mt-5 prev-body"><div class="row gutters-sm">`, post = `</div></div>`
+        for (var i = 0; i < e.target.files.length; i++) {
+            var thumbnailPreviewUrl = URL.createObjectURL(e.target.files[i])
+
+            var body = `<div class="col-6 col-sm-4 col-md-3">
+                                <label class="imagecheck mb-4">
+                                    <figure class="imagecheck-figure">
+                                        <img src="${thumbnailPreviewUrl}" alt="Title" class="imagecheck-image">
+                                    </figure>
+                                </label>
+                            </div>`
+            pre = pre + body
+        }
+        $("prev-body").remove();
+        $(this).parent().append(pre + post)
+    })
+    $(".artwork").click(function(e) {
+        e.preventDefault()
+        window.location = window.location +"/Edit/" + $(this).data('id')
+    })
+
 // Background
 $("[data-background]").each(function() {
     var me = $(this);

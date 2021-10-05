@@ -52,7 +52,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         {
             var model = new ArtistViewModel
             {
-                Skills = _context.Skills.Select(x => x.Name)
+                Skills = _context.Skills.Select(x => new SkillVm { Id = x.Id, Name = x.Name })
             };
             return View(model);
         }
@@ -62,7 +62,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,DateEnrolled,Skills")] ArtistViewModel artistVm)
+        public async Task<IActionResult> Create([Bind("Name,ArtistSkills")] ArtistViewModel artistVm)
         {
             if (ModelState.IsValid)
             {
@@ -72,11 +72,12 @@ namespace NKANA.Areas.Dashboard.Controllers
                     DateEnrolled = DateTime.Now
                 };
 
-                if (artistVm.Skills.Any())
+                if (artistVm.ArtistSkills != null)
                 {
-                    foreach (var skill in artistVm.Skills)
+                    ar.ArtistSkills = new List<ArtistSkill>();
+                    foreach (var skill in artistVm.ArtistSkills)
                     {
-                        var s = _context.Skills.FirstOrDefault(x => x.Name == skill);
+                        var s = _context.Skills.FirstOrDefault(x => x.Id == skill);
                         if (s != null)
                         {
                             ar.ArtistSkills.Add(new ArtistSkill { Artist = ar, Skill = s });
@@ -88,24 +89,30 @@ namespace NKANA.Areas.Dashboard.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            artistVm.Skills = _context.Skills.Select(x => x.Name);
+            artistVm.Skills = _context.Skills.Select(x => new SkillVm { Id = x.Id, Name = x.Name });
             return View(artistVm);
         }
 
         // GET: Dashboard/Artists/Edit/5
-        public async Task<IActionResult> Edit(long? id)
+        public IActionResult Edit(long id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var artist = _context.Artists.Include(x => x.ArtistSkills)
+                .FirstOrDefault(x => x.Id == id);
 
-            var artist = await _context.Artists.FindAsync(id);
             if (artist == null)
             {
                 return NotFound();
             }
-            return View(artist);
+
+            var model = new ArtistViewModel
+            {
+                Id = artist.Id,
+                Name = artist.Name,
+                ArtistSkills = artist.ArtistSkills.Select(x => x.SkillId),
+                Skills = _context.Skills.Select(x => new SkillVm { Id = x.Id, Name = x.Name })
+            };
+
+            return View(model);
         }
 
         // POST: Dashboard/Artists/Edit/5
@@ -113,33 +120,39 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,DateEnrolled,Skills")] ArtistViewModel artistVm)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,ArtistSkills")] ArtistViewModel artistVm)
         {
-            if (id != artistVm.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var artist = await _context.Artists.FindAsync(id);
+                    var artist = _context.Artists.Include(x => x.ArtistSkills)
+                        .FirstOrDefault(x => x.Id == id);
+
                     if (artist == null)
                     {
                         return NotFound();
                     }
 
-                    if (artistVm.Skills.Any())
+                    if (artistVm.ArtistSkills != null)
                     {
-                        foreach (var skill in artistVm.Skills)
+                        foreach (var item in artist.ArtistSkills.ToList())
                         {
-                            var s = _context.Skills.FirstOrDefault(x => x.Name == skill);
+                            artist.ArtistSkills.Remove(item);
+                        }
+                        _context.SaveChanges();
+                        foreach (var skill in artistVm.ArtistSkills)
+                        {
+                            var s = _context.Skills.FirstOrDefault(x => x.Id == skill);
                             if (s != null)
                             {
                                 artist.ArtistSkills.Add(new ArtistSkill { Artist = artist, Skill = s });
                             }
                         }
+                    }
+                    else
+                    {
+                        artist.ArtistSkills = null;
                     }
 
                     artist.Name = artistVm.Name;
@@ -159,7 +172,7 @@ namespace NKANA.Areas.Dashboard.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            artistVm.Skills = _context.Skills.Select(x => x.Name);
+            artistVm.Skills = _context.Skills.Select(x => new SkillVm { Id = x.Id, Name = x.Name });
             return View(artistVm);
         }
         [HttpGet]

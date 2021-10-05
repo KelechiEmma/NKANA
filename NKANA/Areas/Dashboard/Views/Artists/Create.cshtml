@@ -1,4 +1,4 @@
-﻿@model NKANA.Models.Artist
+﻿@model NKANA.ViewModels.ArtistViewModel
 
 @{
     ViewData["Title"] = "Add Artist";
@@ -31,15 +31,16 @@
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                             <div class="form-group">
-                                <label asp-for="DateEnrolled"></label>
-                                <input asp-for="DateEnrolled" type="date" class="form-control">
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                            <div class="form-group">
+                                @if (Model.Skills != null)
+                                {
+                                    foreach (var skill in Model.Skills)
+                                    {
                                 <div class="form-check-inline">
-                                    <input class="form-check-input" type="checkbox" asp-for="ArtistSkills">
-                                    <label class="form-check-label" asp-for="ArtistSkills">@Html.DisplayNameFor(model => model.ArtistSkills)</label>
+                                    <input class="form-check-input" type="checkbox" value="@skill.Id" name="ArtistSkills[]">
+                                    <label class="form-check-label" asp-for="Skills">@skill.Name</label>
                                 </div>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="card-footer text-right">

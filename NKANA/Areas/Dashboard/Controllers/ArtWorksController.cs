@@ -52,7 +52,7 @@ namespace NKANA.Areas.Dashboard.Controllers
 
             var artWork = await _context.ArtWorks
                 .Include(a => a.Artist)
-                .Include(x => x.ArtWorkMedias).ThenInclude(k => k.Media)
+                .Include(x => x.ArtWorkImages)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (artWork == null)
             {
@@ -66,9 +66,10 @@ namespace NKANA.Areas.Dashboard.Controllers
                 ThumbnailUrl = artWork.ThumnailImage,
                 Artist = artWork.Artist.Name,
                 DateCreated = artWork.DateCreated,
+                Price = artWork.Price,
                 Description = artWork.Description,
-                ImagesUrl = artWork.ArtWorkMedias.Where(x => x.Media.MediaType == MediaType.Image)
-                .Select(x => x.Media.MediaUrl)
+
+                ImagesUrl = artWork.ArtWorkImages.Select(x => x.ImageUrl)
             };
             return View(vm);
         }
@@ -77,7 +78,11 @@ namespace NKANA.Areas.Dashboard.Controllers
         public IActionResult Create()
         {
             ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Name");
-            return View();
+            var model = new ArtWorkFormVm
+            {
+                Categories = _context.Categories.Select(x => new CategoryVm { Id = x.Id, Name = x.Name })
+            };
+            return View(model);
         }
 
         // POST: Dashboard/ArtWorks/Create
@@ -85,7 +90,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Title,ArtistId,Description,ThumbnailImage,OtherImages")] ArtWorkFormVm artWorkVm)
+        public async Task<IActionResult> Create([Bind("Title,ArtistId,Description,ThumbnailImage,OtherImages,ArtWorkCategories,IsFeatured,Price")] ArtWorkFormVm artWorkVm)
         {
             if (ModelState.IsValid)
             {
@@ -93,41 +98,58 @@ namespace NKANA.Areas.Dashboard.Controllers
                 {
                     Title = artWorkVm.Title,
                     ArtistId = artWorkVm.ArtistId,
+                    IsFeatured = artWorkVm.IsFeatured,
                     DateCreated = DateTime.Now,
                     Description = artWorkVm.Description,
+                    Price = artWorkVm.Price,
                     ThumnailImage = artWorkVm.ThumbnailImage == null? "" : await SaveFile(artWorkVm.ThumbnailImage)
                 };
 
                 if (artWorkVm.OtherImages != null)
                 {
+                    artWork.ArtWorkImages = new List<ArtWorkImage>();
                     foreach (var file in artWorkVm.OtherImages)
                     {
-                        artWork.ArtWorkMedias.Add(new ArtWorkMedia
+                        artWork.ArtWorkImages.Add(new ArtWorkImage
                         {
                             ArtWork = artWork,
-                            Media = new Media
-                            {
-                                MediaType = MediaType.Image,
-                                MediaUrl = await SaveFile(file)
-                            }
+                            ImageUrl = await SaveFile(file)
                         });
                     }
                 }
                 
+                if (artWorkVm.ArtWorkCategories != null)
+                {
+                    artWork.ArtWorkCategories = new List<ArtWorkCategory>();
+                    foreach (var cat in artWorkVm.ArtWorkCategories)
+                    {
+                        var s = _context.Categories.FirstOrDefault(x => x.Id == cat);
+                        if (s != null)
+                        {
+                            artWork.ArtWorkCategories.Add(new ArtWorkCategory { ArtWork = artWork, CategoryId = s.Id });
+                        }
+                    }
+                }
+
                 _context.Add(artWork);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
             ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Name", artWorkVm.ArtistId);
+            artWorkVm.Categories = _context.Categories.Select(x => new CategoryVm { Id = x.Id, Name = x.Name });
             return View(artWorkVm);
         }
 
         // GET: Dashboard/ArtWorks/Edit/5
+        [HttpGet]
         public IActionResult Edit(long id)
         {
-            var artWork = _context.ArtWorks.Include(n => n.ArtWorkMedias)
-                .ThenInclude(n => n.Media).FirstOrDefault(x => x.Id == id);
+            var artWork = _context.ArtWorks
+                .Include(n => n.ArtWorkImages)
+                .Include(n => n.ArtWorkCategories)
+                .FirstOrDefault(x => x.Id == id);
+
             if (artWork == null)
             {
                 return NotFound();
@@ -139,10 +161,12 @@ namespace NKANA.Areas.Dashboard.Controllers
                 ArtistId = artWork.ArtistId,
                 Description = artWork.Description,
                 Id = artWork.Id,
+                Price = artWork.Price,
+                IsFeatured = artWork.IsFeatured,
                 ThumbnailUrl = artWork.ThumnailImage,
-                ImagesUrl = artWork.ArtWorkMedias
-                .Where(n => n.Media.MediaType == MediaType.Image)
-                .Select(c => c.Media.MediaUrl)
+                ImagesUrl = artWork.ArtWorkImages.Select(c => c.ImageUrl),
+                ArtWorkCategories = artWork.ArtWorkCategories.Select(x => x.CategoryId),
+                Categories = _context.Categories.Select(x => new CategoryVm { Id = x.Id, Name = x.Name })
             };
 
             ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Name", artWork.ArtistId);
@@ -154,14 +178,15 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,ArtistId,Description,ThumnailImage,OtherImages")] ArtWorkFormVm model)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,ArtistId,Description,ThumbnailImage,OtherImages,ArtWorkCategories,IsFeatured,Price")] ArtWorkFormVm model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var artWork = _context.ArtWorks.Include(n => n.ArtWorkMedias)
-                        .ThenInclude(n => n.Media).FirstOrDefault(x => x.Id == id);
+                    var artWork = _context.ArtWorks.Include(n => n.ArtWorkImages)
+                        .Include(n => n.ArtWorkCategories)
+                        .FirstOrDefault(x => x.Id == id);
 
                     if (artWork == null)
                     {
@@ -171,22 +196,46 @@ namespace NKANA.Areas.Dashboard.Controllers
                     artWork.Title = model.Title;
                     artWork.Description = model.Description;
                     artWork.ArtistId = model.ArtistId;
-                    artWork.ThumnailImage = model.ThumbnailImage == null ? "" : await SaveFile(model.ThumbnailImage);
+                    artWork.IsFeatured = model.IsFeatured;
+                    artWork.Price = model.Price;
+                    if (model.ThumbnailImage != null)
+                    {
+                        artWork.ThumnailImage = await SaveFile(model.ThumbnailImage);
+                    }
                     
                     if (model.OtherImages != null)
                     {
                         foreach (var file in model.OtherImages)
                         {
-                            artWork.ArtWorkMedias.Add(new ArtWorkMedia
+                            artWork.ArtWorkImages ??= new List<ArtWorkImage>();
+                            artWork.ArtWorkImages.Add(new ArtWorkImage
                             {
                                 ArtWork = artWork,
-                                Media = new Media
-                                {
-                                    MediaType = MediaType.Image,
-                                    MediaUrl = await SaveFile(file)
-                                }
+                                ImageUrl = await SaveFile(file)
                             });
                         }
+                    }
+
+                    if (model.ArtWorkCategories != null)
+                    {
+                        foreach (var item in artWork.ArtWorkCategories.ToList())
+                        {
+                            artWork.ArtWorkCategories.Remove(item);
+                        }
+                        _context.SaveChanges();
+
+                        foreach (var cat in model.ArtWorkCategories)
+                        {
+                            var s = _context.Categories.FirstOrDefault(x => x.Id == cat);
+                            if (s != null)
+                            {
+                                artWork.ArtWorkCategories.Add(new ArtWorkCategory { ArtWork = artWork, CategoryId = s.Id });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        artWork.ArtWorkCategories = null;
                     }
 
                     _context.Update(artWork);
@@ -205,6 +254,8 @@ namespace NKANA.Areas.Dashboard.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            model.Categories = _context.Categories.Select(x => new CategoryVm { Id = x.Id, Name = x.Name });
             ViewData["ArtistId"] = new SelectList(_context.Artists, "Id", "Name", model.ArtistId);
             return View(model);
         }

@@ -19,10 +19,9 @@ namespace NKANA.Data
         public DbSet<ArtistSkill> ArtistSkills { get; set; }
         public DbSet<ArtWork> ArtWorks { get; set; }
         public DbSet<ArtWorkCategory> ArtWorkCategories { get; set; }
-        public DbSet<ArtWorkMedia> ArtWorkMedias { get; set; }
+        public DbSet<ArtWorkImage> ArtWorkImages { get; set; }
         public DbSet<ArtWorkRequest> ArtWorkRequests { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Media> Medias { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<NkanaUser> User { get; set; }
 
@@ -30,13 +29,15 @@ namespace NKANA.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<NkanaUser>().ToTable("Users");
-            builder.Entity<IdentityRole>().ToTable("Roles");
-            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
-            builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims");
-            builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
-            builder.Entity<IdentityUserRole<string>>().ToTable("UserRoles");
-            builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            builder.Entity<ArtWorkCategory>(o =>
+            {
+                o.HasKey(x => new { x.CategoryId, x.ArtWorkId });
+            });
+
+            builder.Entity<ArtistSkill>(o =>
+            {
+                o.HasKey(x => new { x.ArtistId, x.SkillId });
+            });
         }
     }
 }

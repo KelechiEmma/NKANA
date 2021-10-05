@@ -121,7 +121,7 @@ namespace NKANA.Areas.Dashboard.Controllers
                         }
                     }
                     ct.Name = category.Name;
-                    _context.Update(category);
+                    _context.Update(ct);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
