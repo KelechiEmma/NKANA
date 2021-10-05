@@ -121,12 +121,12 @@ namespace NKANA
             var passwords = new string[] { "greenadmin@Fdt122", "FindingSpaces&Trees", "Stranded@001", "level12#Goose" };
             for (int i = 0; i < users.Count; i++)
             {
-                //if (await userManager.FindByIdAsync(users[i].Id) != null) continue;
-
+                if (await userManager.FindByIdAsync(users[i].Id) != null) continue;
                 var result = await userManager.CreateAsync(users[i], passwords[i]);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRolesAsync(users[i], new string[] { "Admin", "SuperAdmin" });
+                    var user = await userManager.FindByIdAsync(users[i].Id);
+                    await userManager.AddToRolesAsync(user, new string[] { "SuperAdmin" });
                 }
             }
 

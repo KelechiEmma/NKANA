@@ -64,7 +64,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name")] Category category, IFormFile ThumnailImage)
+        public async Task<IActionResult> Create([Bind("Name,ShowInNavbar")] Category category, IFormFile ThumnailImage)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Name")] Category category, IFormFile ThumnailImage)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Name,ShowInNavbar")] Category category, IFormFile ThumnailImage)
         {
             if (id != category.Id)
             {
@@ -120,6 +120,8 @@ namespace NKANA.Areas.Dashboard.Controllers
                             ct.ThumnailImage = await SaveFile(ThumnailImage);
                         }
                     }
+
+                    ct.ShowInNavbar = category.ShowInNavbar;
                     ct.Name = category.Name;
                     _context.Update(ct);
                     await _context.SaveChangesAsync();

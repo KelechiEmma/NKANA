@@ -22,7 +22,7 @@ namespace NKANA.Areas.Gallery.Controllers
         }
 
         // GET: Gallery/ArtWorks
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var model = _context.ArtWorks.OrderBy(z => z.DateCreated)
                 .Take(50)

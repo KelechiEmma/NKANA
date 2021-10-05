@@ -494,7 +494,7 @@ if(jQuery().Chocolat) {
         e.preventDefault()
         window.location = window.location +"/Edit/" + $(this).data('id')
     })
-
+    
 // Background
 $("[data-background]").each(function() {
     var me = $(this);

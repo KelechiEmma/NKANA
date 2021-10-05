@@ -32,6 +32,7 @@ namespace NKANA.Areas.Dashboard.Controllers
                     Id = x.Id,
                     ArtWorkId = x.ArtWorkId,
                     IsRead = x.IsRead,
+                    ArtWork = x.ArtWork.Title,
                     RequestDate = x.RequestDate.ToLocalTime().ToString(),
                     Title = x.Title,
                     User = x.User.UserName
@@ -61,8 +62,12 @@ namespace NKANA.Areas.Dashboard.Controllers
                 RequestDate = request.RequestDate.ToLocalTime().ToString(),
                 Title = request.Title,
                 Price = request.ArtWork.Price,
-                User = request.User.UserName
+                User = request.User.UserName,
+                UserId = request.User.Id
             };
+
+            request.IsRead = true;
+            _context.SaveChanges();
             return View(model);
         }
     }
