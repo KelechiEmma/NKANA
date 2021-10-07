@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -14,15 +15,15 @@ using NKANA.ViewModels;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    //[Authorize(Roles ="Admin,SuperAdmin")]
+    [Authorize(Roles ="Admin,SuperAdmin")]
     public class NkanaUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly NkanaUserManager _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly NkanaRoleManager _roleManager;
 
         public NkanaUsersController(ApplicationDbContext context, NkanaUserManager userManager,
-            RoleManager<IdentityRole> roleManager)
+            NkanaRoleManager roleManager)
         {
             _context = context;
             _userManager = userManager;
@@ -197,6 +198,13 @@ namespace NKANA.Areas.Dashboard.Controllers
                 {
                     if (model.UserRoles != null)
                     {
+                        var userRoles = _context.UserRoles.AsNoTracking().Where(x => x.UserId == user.Id);
+                        foreach (var ur in userRoles)
+                        {
+                            var r = await _roleManager.FindByIdAsync(ur.RoleId);
+                            await _userManager.RemoveFromRoleAsync(user, r.Name);
+                        }
+
                         foreach (var role in model.UserRoles)
                         {
                             var r = await _roleManager.FindByIdAsync(role);

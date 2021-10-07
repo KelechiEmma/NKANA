@@ -18,7 +18,7 @@ using static System.Net.WebRequestMethods;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    //[Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

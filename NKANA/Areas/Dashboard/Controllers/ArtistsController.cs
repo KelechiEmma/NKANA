@@ -13,7 +13,7 @@ using NKANA.ViewModels;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    //[Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class ArtistsController : Controller
     {
         private readonly ApplicationDbContext _context;

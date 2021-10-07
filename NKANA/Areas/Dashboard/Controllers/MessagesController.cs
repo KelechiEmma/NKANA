@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
@@ -12,7 +13,7 @@ using NKANA.ViewModels;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    //[Authorize(Roles = "Admin,SuperAdmin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext _context;
