@@ -19,14 +19,14 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<NkanaUser> _signInManager;
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaSignInManager _signInManager;
+        private readonly NkanaUserManager _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager,
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {

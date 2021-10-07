@@ -1,4 +1,4 @@
-﻿@model NKANA.Models.NkanaUser
+﻿@model NKANA.ViewModels.NkanaUserFormVm
 
 @{
     ViewData["Title"] = "Edit User";
@@ -26,11 +26,6 @@
                         <div class="card-body">
                             <div class="alert alert-info" asp-validation-summary="ModelOnly"> </div>
                             <input asp-for="Id" type="hidden" />
-                            <input asp-for="NormalizedUserName" type="hidden" />
-                            <input asp-for="NormalizedEmail" type="hidden" />
-                            <input asp-for="PasswordHash" type="hidden" />
-                            <input asp-for="SecurityStamp" type="hidden" />
-                            <input asp-for="ConcurrencyStamp" type="hidden" />
                             <div class="form-group">
                                 <label asp-for="FirstName"></label>
                                 <input asp-for="FirstName" class="form-control">
@@ -45,6 +40,11 @@
                                 <label asp-for="UserName"></label>
                                 <input asp-for="UserName" class="form-control">
                                 <span asp-validation-for="UserName" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Password"></label>
+                                <input asp-for="Password" class="form-control">
+                                <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label asp-for="Email"></label>
@@ -78,6 +78,26 @@
                                     <input class="form-check-input" type="checkbox" asp-for="LockoutEnabled">
                                     <label class="form-check-label" asp-for="LockoutEnabled">@Html.DisplayNameFor(model => model.LockoutEnabled)</label>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="d-block" asp-for="Roles"></label>
+                                @if (Model.Roles != null)
+                                {
+                                    foreach (var role in Model.Roles)
+                                    {
+                                        <div class="form-check-inline">
+                                            @if (Model.UserRoles != null && Model.UserRoles.Contains(role.Id))
+                                            {
+                                                <input class="form-check-input" type="checkbox" value="@role.Id" name="UserRoles[]" checked>
+                                            }
+                                            else
+                                            {
+                                                <input class="form-check-input" type="checkbox" value="@role.Id" name="UserRoles[]">
+                                            }
+                                            <label class="form-check-label" asp-for="Roles">@role.Name</label>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="card-footer text-right">

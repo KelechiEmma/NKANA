@@ -13,10 +13,10 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<NkanaUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(NkanaSignInManager signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

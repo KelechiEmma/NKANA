@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.ViewModels;
 
 namespace NKANA.Areas.Gallery.Controllers
 {
@@ -21,27 +21,51 @@ namespace NKANA.Areas.Gallery.Controllers
         }
 
         // GET: Gallery/Categories
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Categories.ToListAsync());
+            var model =  _context.Categories
+                .OrderBy(x => x.Id).Take(50)
+                .Select(x => new CategoryVm
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    ThumbnailUrl = x.ThumnailImage
+                });
+                
+            return View(model);
         }
 
         // GET: Gallery/Categories/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public IActionResult Details(long id)
         {
-            if (id == null)
+            var cat = _context.Categories
+                .FirstOrDefault(x => x.Id == id);
+                
+            if (cat == null)
             {
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            var catArts = _context.ArtWorkCategories
+                .Include(x => x.ArtWork).ThenInclude(x => x.Artist)
+                .Where(x => x.CategoryId == id)
+                .OrderBy(x => x.Id).Take(50)
+                .Select(x => new ArtWorkSnapshot
+                {
+                    Id = x.ArtWorkId,
+                    Artist = x.ArtWork.Artist.Name,
+                    ThumbnailUrl = x.ArtWork.ThumnailImage,
+                    Title = x.ArtWork.ThumnailImage
+                }).ToList();
 
-            return View(category);
+            var model = new CategoryViewModel
+            {
+                Id = cat.Id,
+                Name = cat.Name,
+                ArtWorks = catArts
+            };
+
+            return View(model);
         }
     }
 }

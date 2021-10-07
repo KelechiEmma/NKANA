@@ -16,10 +16,10 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaUserManager _userManager;
         private readonly IEmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<NkanaUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(NkanaUserManager userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

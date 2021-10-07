@@ -13,13 +13,13 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
     {
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}";
 
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<TwoFactorAuthenticationModel> _logger;
 
         public TwoFactorAuthenticationModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager,
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager,
             ILogger<TwoFactorAuthenticationModel> logger)
         {
             _userManager = userManager;

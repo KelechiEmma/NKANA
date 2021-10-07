@@ -1,7 +1,7 @@
-﻿using NKANA.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using NKANA.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace NKANA.ViewModels
 {

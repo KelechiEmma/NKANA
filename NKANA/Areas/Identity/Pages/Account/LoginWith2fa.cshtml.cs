@@ -14,10 +14,10 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
-        public LoginWith2faModel(SignInManager<NkanaUser> signInManager, ILogger<LoginWith2faModel> logger)
+        public LoginWith2faModel(NkanaSignInManager signInManager, ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;

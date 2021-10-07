@@ -19,14 +19,14 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel
     {
-        private readonly SignInManager<NkanaUser> _signInManager;
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaSignInManager _signInManager;
+        private readonly NkanaUserManager _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
 
         public ExternalLoginModel(
-            SignInManager<NkanaUser> signInManager,
-            UserManager<NkanaUser> userManager,
+            NkanaSignInManager signInManager,
+            NkanaUserManager userManager,
             ILogger<ExternalLoginModel> logger,
             IEmailSender emailSender)
         {

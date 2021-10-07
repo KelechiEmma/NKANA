@@ -11,11 +11,11 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public class GenerateRecoveryCodesModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaUserManager _userManager;
         private readonly ILogger<GenerateRecoveryCodesModel> _logger;
 
         public GenerateRecoveryCodesModel(
-            UserManager<NkanaUser> userManager,
+            NkanaUserManager userManager,
             ILogger<GenerateRecoveryCodesModel> logger)
         {
             _userManager = userManager;

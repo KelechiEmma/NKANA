@@ -17,9 +17,9 @@ namespace NKANA.Areas.Gallery.Controllers
     public class RequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaUserManager _userManager;
 
-        public RequestsController(ApplicationDbContext context, UserManager<NkanaUser> userManager)
+        public RequestsController(ApplicationDbContext context, NkanaUserManager userManager)
         {
             _context = context;
             _userManager = userManager;
