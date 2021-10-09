@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    [Authorize(Roles = ("Admin,SuperAdmin")]
+    [Authorize(Roles = ("Admin,SuperAdmin"))]
     public class DashboardController : Controller
     {
         [HttpGet("dashboard")]

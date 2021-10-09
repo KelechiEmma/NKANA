@@ -29,6 +29,17 @@ namespace NKANA.Areas.Dashboard.Controllers
             return View(await _context.Artists.ToListAsync());
         }
 
+        // GET: Dashboard/Artists
+        [HttpPost]
+        public async Task<IActionResult> Index(string q)
+        {
+            if (!string.IsNullOrEmpty(q))
+            {
+                return View(_context.Artists.AsNoTracking().Where(x => x.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)));
+            }
+            return View(await _context.Artists.ToListAsync());
+        }
+
         // GET: Dashboard/Artists/Details/5
         public async Task<IActionResult> Details(long? id)
         {

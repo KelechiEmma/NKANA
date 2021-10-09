@@ -31,12 +31,14 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/NkanaUsers
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Users.ToListAsync());
         }
 
         // GET: Dashboard/NkanaUsers/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -55,6 +57,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/NkanaUsers/Create
+        [HttpGet]
         public IActionResult Create()
         {
             var model = new NkanaUserFormVm
@@ -100,11 +103,7 @@ namespace NKANA.Areas.Dashboard.Controllers
                     {
                         foreach (var role in model.UserRoles)
                         {
-                            var r = await _roleManager.FindByIdAsync(role);
-                            if (r != null)
-                            {
-                                await _userManager.AddToRoleAsync(user, r.Name);
-                            }
+                            await _userManager.AddToRoleAsync(user, role);
                         }
                     }
                     return RedirectToAction(nameof(Index));
@@ -132,6 +131,7 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/NkanaUsers/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             var nkanaUser = await _context.Users.FindAsync(id);
@@ -160,7 +160,8 @@ namespace NKANA.Areas.Dashboard.Controllers
                     Id = x.Id,
                     Name = x.Name
                 }),
-                UserRoles = _context.UserRoles.Select(x => x.RoleId )
+                UserRoles = _context.UserRoles.
+                Where(x => x.UserId == nkanaUser.Id).Select(x => x.RoleId)
             };
 
             return View(model);
@@ -176,7 +177,7 @@ namespace NKANA.Areas.Dashboard.Controllers
             if (ModelState.IsValid)
             {
                     var user = _context.Users.FirstOrDefault(e => e.Id == id);
-                    if (user != null)
+                    if (user == null)
                     {
                         return NotFound();
                     }
@@ -198,19 +199,22 @@ namespace NKANA.Areas.Dashboard.Controllers
                 {
                     if (model.UserRoles != null)
                     {
-                        var userRoles = _context.UserRoles.AsNoTracking().Where(x => x.UserId == user.Id);
+                        // remove old roles not listed anymore
+                        var userRoles = await _userManager.GetRolesAsync(user);
                         foreach (var ur in userRoles)
                         {
-                            var r = await _roleManager.FindByIdAsync(ur.RoleId);
-                            await _userManager.RemoveFromRoleAsync(user, r.Name);
+                            if (!model.UserRoles.Contains(ur))
+                            {
+                                await _userManager.RemoveFromRoleAsync(user, ur);
+                            }
                         }
 
-                        foreach (var role in model.UserRoles)
+                        // add user to new roles
+                        foreach (var ur in model.UserRoles)
                         {
-                            var r = await _roleManager.FindByIdAsync(role);
-                            if (r != null)
+                            if (!userRoles.Contains(ur))
                             {
-                                await _userManager.AddToRoleAsync(user, r.Name);
+                                await _userManager.AddToRoleAsync(user, ur);
                             }
                         }
                     }
@@ -252,11 +256,6 @@ namespace NKANA.Areas.Dashboard.Controllers
             _context.Users.Remove(nkanaUser);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool NkanaUserExists(string id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

@@ -22,7 +22,7 @@
                         <h4>Create User</h4>
                     </div>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <form asp-action="Create">
+                    <form asp-area="Dashboard" asp-controller="NkanaUsers" asp-action="Create">
                         <div class="card-body">
                             <div class="alert alert-info" asp-validation-summary="ModelOnly"> </div>
                             <input asp-for="Id" type="hidden" />
@@ -87,7 +87,7 @@
                                     foreach (var role in Model.Roles)
                                     {
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="checkbox" value="@role.Id" name="UserRoles[]">
+                                            <input class="form-check-input" type="checkbox" value="@role.Name" name="UserRoles[]">
                                             <label class="form-check-label" asp-for="Roles">@role.Name</label>
                                         </div>
                                     }

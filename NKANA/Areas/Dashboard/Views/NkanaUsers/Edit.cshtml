@@ -22,7 +22,7 @@
                         <h4>Edit User</h4>
                     </div>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <form asp-action="Edit" method="post">
+                    <form asp-area="Dashboard" asp-controller="NkanaUsers" asp-action="Edit" method="post">
                         <div class="card-body">
                             <div class="alert alert-info" asp-validation-summary="ModelOnly"> </div>
                             <input asp-for="Id" type="hidden" />
@@ -88,11 +88,11 @@
                                         <div class="form-check-inline">
                                             @if (Model.UserRoles != null && Model.UserRoles.Contains(role.Id))
                                             {
-                                                <input class="form-check-input" type="checkbox" value="@role.Id" name="UserRoles[]" checked>
+                                                <input class="form-check-input" type="checkbox" value="@role.Name" name="UserRoles[]" checked>
                                             }
                                             else
                                             {
-                                                <input class="form-check-input" type="checkbox" value="@role.Id" name="UserRoles[]">
+                                                <input class="form-check-input" type="checkbox" value="@role.Name" name="UserRoles[]">
                                             }
                                             <label class="form-check-label" asp-for="Roles">@role.Name</label>
                                         </div>

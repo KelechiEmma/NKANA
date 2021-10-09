@@ -22,7 +22,7 @@
                         <h4>Create Artist</h4>
                     </div>
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <form asp-action="Edit">
+                    <form asp-area="Dashboard" asp-controller="Artists" asp-action="Edit" method="post">
                         <div class="card-body">
                             <input asp-for="Id" type="hidden">
                             <div class="text-danger" asp-validation-summary="All"> </div>

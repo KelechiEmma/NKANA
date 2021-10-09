@@ -28,12 +28,6 @@ namespace NKANA
                 o.EnableEndpointRouting = false;
             });
 
-            services.ConfigureApplicationCookie(x =>
-            {
-                x.LoginPath = new PathString("/Identity/Account/login");
-                x.AccessDeniedPath = new PathString("/Identity/Account/AccessDenied");
-            });
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -51,6 +45,12 @@ namespace NKANA
                 .AddRoleManager<NkanaRoleManager>()
                 .AddSignInManager<NkanaSignInManager>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.ConfigureApplicationCookie(x =>
+            {
+                x.LoginPath = new PathString("/Identity/Account/login");
+                x.AccessDeniedPath = new PathString("/Identity/Account/AccessDenied");
+            });
 
             services.AddControllersWithViews();
         }
