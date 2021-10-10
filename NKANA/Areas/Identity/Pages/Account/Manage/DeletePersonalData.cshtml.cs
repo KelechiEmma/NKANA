@@ -10,13 +10,13 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public class DeletePersonalDataModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
 
         public DeletePersonalDataModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager,
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager,
             ILogger<DeletePersonalDataModel> logger)
         {
             _userManager = userManager;

@@ -8,11 +8,11 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public class PersonalDataModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaUserManager _userManager;
         private readonly ILogger<PersonalDataModel> _logger;
 
         public PersonalDataModel(
-            UserManager<NkanaUser> userManager,
+            NkanaUserManager userManager,
             ILogger<PersonalDataModel> logger)
         {
             _userManager = userManager;

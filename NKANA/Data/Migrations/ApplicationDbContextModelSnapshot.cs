@@ -19,7 +19,173 @@ namespace NKANA.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWork", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ArtistId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset>("DateCreated")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ThumnailImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtistId");
+
+                    b.ToTable("ArtWorks");
+                });
+
+            modelBuilder.Entity("NKANA.Models.ArtWorkCategory", b =>
+                {
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ArtWorkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("CategoryId", "ArtWorkId");
+
+                    b.HasIndex("ArtWorkId");
+
+                    b.ToTable("ArtWorkCategories");
+                });
+
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ArtWorkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtWorkId");
+
+                    b.ToTable("ArtWorkImages");
+                });
+
+            modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<long>("ArtWorkId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("RequestDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArtWorkId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ArtWorkRequests");
+                });
+
+            modelBuilder.Entity("NKANA.Models.Artist", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DateEnrolled")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Artists");
+                });
+
+            modelBuilder.Entity("NKANA.Models.ArtistSkill", b =>
+                {
+                    b.Property<long>("ArtistId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SkillId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ArtistId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("ArtistSkills");
+                });
+
+            modelBuilder.Entity("NKANA.Models.Category", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("ShowInNavbar")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ThumnailImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("NKANA.Models.NkanaRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -43,10 +209,33 @@ namespace NKANA.Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1135f23e-fcafce7b94ae-2eaf44ef830d",
+                            ConcurrencyStamp = "0858238f-f3b3-42f7-a34b-d43d54e02462",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "bede-69a91d0e771d-4f974cf1-bc02-4aa7",
+                            ConcurrencyStamp = "6954fc97-7e60-45ed-a80f-e319a40399b0",
+                            Name = "Artist",
+                            NormalizedName = "ARTIST"
+                        },
+                        new
+                        {
+                            Id = "1135f23e-44ef-2eaf-830d-7b94aefcafce",
+                            ConcurrencyStamp = "c6d848c3-4885-4ca6-b88c-a5e93187bac8",
+                            Name = "SuperAdmin",
+                            NormalizedName = "SUPERADMIN"
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaRoleClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -67,10 +256,10 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -88,6 +277,12 @@ namespace NKANA.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -133,9 +328,75 @@ namespace NKANA.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "4f974cf1-bc02-4aa7-bede-69a91d0e771d",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "fa7ff9e8-fae8-4a2e-8664-a32dce6d7332",
+                            Email = "admin@acdte.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@ACDTE.COM",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOXP8qq84anuzQkszIvCVMnQYrgE6iKWHkppA6JH6w8/116oC+X5VKvPOw941/asYQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "fa7ff9e8-fae8-4a2e-8664-a32dce6d7332",
+                            TwoFactorEnabled = false,
+                            UserName = "Admin"
+                        },
+                        new
+                        {
+                            Id = "0e20a2de-342e-4b9d-a153-1c180e7f6435",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "66e5e17c-7391-4937-9a82-bc36661a2f7e",
+                            Email = "superadmin@acdte.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SUPERADMIN@ACDTE.COM",
+                            NormalizedUserName = "SUPERADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEELp6FqpcHmlQMXwrflJ4BAsAa3jwm133/AWr99VcuOQoBvMHGz78IRt3EOtXUfIyg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "66e5e17c-7391-4937-9a82-bc36661a2f7e",
+                            TwoFactorEnabled = false,
+                            UserName = "SuperAdmin"
+                        },
+                        new
+                        {
+                            Id = "1135f23e-2eaf-44ef-830d-fcafce7b94ae",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "fa7ff9e8-fae8-4a2e-a32dce6d7332-8664",
+                            Email = "system@acdte.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "SYSTEM@ACDTE.COM",
+                            NormalizedUserName = "SYSTEM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOXP8qq84anuzQkszIvCVMnQYrgE6iKWHkppA6JH6w8/116oC+X5VKvPOw941/asYQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "fa7ff9e8-fae8-4a2e-a32dce6d7332-8664",
+                            TwoFactorEnabled = false,
+                            UserName = "System"
+                        },
+                        new
+                        {
+                            Id = "1135f23e-44ef-2eaf-830d-7b94aefcafce",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "7391-66e5e17c-4937-9a82-bc36661a2f7e",
+                            Email = "africhina@acdte.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "AFRICHINA@ACDTE.COM",
+                            NormalizedUserName = "AFRICHINA",
+                            PasswordHash = "AQAAAAEAACcQAAAAEELp6FqpcHmlQMXwrflJ4BAsAa3jwm133/AWr99VcuOQoBvMHGz78IRt3EOtXUfIyg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7391-66e5e17c-4937-9a82-bc36661a2f7e",
+                            TwoFactorEnabled = false,
+                            UserName = "Africhina"
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaUserClaim", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -156,10 +417,10 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("AspNetUserClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaUserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
                         .HasColumnType("nvarchar(450)");
@@ -178,10 +439,10 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogins");
+                    b.ToTable("AspNetUserLogins");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaUserRole", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -193,10 +454,47 @@ namespace NKANA.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("AspNetUserRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "0e20a2de-342e-4b9d-a153-1c180e7f6435",
+                            RoleId = "1135f23e-fcafce7b94ae-2eaf44ef830d"
+                        },
+                        new
+                        {
+                            UserId = "0e20a2de-342e-4b9d-a153-1c180e7f6435",
+                            RoleId = "1135f23e-44ef-2eaf-830d-7b94aefcafce"
+                        },
+                        new
+                        {
+                            UserId = "1135f23e-2eaf-44ef-830d-fcafce7b94ae",
+                            RoleId = "1135f23e-fcafce7b94ae-2eaf44ef830d"
+                        },
+                        new
+                        {
+                            UserId = "1135f23e-2eaf-44ef-830d-fcafce7b94ae",
+                            RoleId = "1135f23e-44ef-2eaf-830d-7b94aefcafce"
+                        },
+                        new
+                        {
+                            UserId = "1135f23e-44ef-2eaf-830d-7b94aefcafce",
+                            RoleId = "1135f23e-fcafce7b94ae-2eaf44ef830d"
+                        },
+                        new
+                        {
+                            UserId = "1135f23e-44ef-2eaf-830d-7b94aefcafce",
+                            RoleId = "1135f23e-44ef-2eaf-830d-7b94aefcafce"
+                        },
+                        new
+                        {
+                            UserId = "4f974cf1-bc02-4aa7-bede-69a91d0e771d",
+                            RoleId = "1135f23e-fcafce7b94ae-2eaf44ef830d"
+                        });
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("NKANA.Models.NkanaUserToken", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -212,247 +510,7 @@ namespace NKANA.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserTokens");
-                });
-
-            modelBuilder.Entity("NKANA.Models.ArtWork", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArtistId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThumnailImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
-
-                    b.ToTable("ArtWorks");
-                });
-
-            modelBuilder.Entity("NKANA.Models.ArtWorkCategory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArtWorkId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CategoryId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtWorkId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ArtWorkCategories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArtWorkId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("MediaId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtWorkId");
-
-                    b.HasIndex("MediaId");
-
-                    b.ToTable("ArtWorkMedias");
-                });
-
-            modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArtWorkId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset>("RequestDate")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtWorkId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ArtWorkRequests");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Artist", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateEnrolled")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Artists");
-                });
-
-            modelBuilder.Entity("NKANA.Models.ArtistSkill", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<long>("ArtistId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("SkillId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ArtistId");
-
-                    b.HasIndex("SkillId");
-
-                    b.ToTable("ArtistSkills");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Category", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ThumnailImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("MediaType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MediaUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medias");
-                });
-
-            modelBuilder.Entity("NKANA.Models.NkanaUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
+                    b.ToTable("AspNetUserTokens");
                 });
 
             modelBuilder.Entity("NKANA.Models.Skill", b =>
@@ -468,57 +526,6 @@ namespace NKANA.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWork", b =>
@@ -551,23 +558,15 @@ namespace NKANA.Data.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("NKANA.Models.ArtWorkMedia", b =>
+            modelBuilder.Entity("NKANA.Models.ArtWorkImage", b =>
                 {
                     b.HasOne("NKANA.Models.ArtWork", "ArtWork")
-                        .WithMany("ArtWorkMedias")
+                        .WithMany("ArtWorkImages")
                         .HasForeignKey("ArtWorkId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NKANA.Models.Media", "Media")
-                        .WithMany("ArtWorkMedias")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ArtWork");
-
-                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("NKANA.Models.ArtWorkRequest", b =>
@@ -578,7 +577,7 @@ namespace NKANA.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("NKANA.Models.NkanaUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -608,11 +607,62 @@ namespace NKANA.Data.Migrations
                     b.Navigation("Skill");
                 });
 
+            modelBuilder.Entity("NKANA.Models.NkanaRoleClaim", b =>
+                {
+                    b.HasOne("NKANA.Models.NkanaRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NKANA.Models.NkanaUserClaim", b =>
+                {
+                    b.HasOne("NKANA.Models.NkanaUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NKANA.Models.NkanaUserLogin", b =>
+                {
+                    b.HasOne("NKANA.Models.NkanaUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NKANA.Models.NkanaUserRole", b =>
+                {
+                    b.HasOne("NKANA.Models.NkanaRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NKANA.Models.NkanaUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("NKANA.Models.NkanaUserToken", b =>
+                {
+                    b.HasOne("NKANA.Models.NkanaUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("NKANA.Models.ArtWork", b =>
                 {
                     b.Navigation("ArtWorkCategories");
 
-                    b.Navigation("ArtWorkMedias");
+                    b.Navigation("ArtWorkImages");
                 });
 
             modelBuilder.Entity("NKANA.Models.Artist", b =>
@@ -625,11 +675,6 @@ namespace NKANA.Data.Migrations
             modelBuilder.Entity("NKANA.Models.Category", b =>
                 {
                     b.Navigation("ArtWorkCategories");
-                });
-
-            modelBuilder.Entity("NKANA.Models.Media", b =>
-                {
-                    b.Navigation("ArtWorkMedias");
                 });
 
             modelBuilder.Entity("NKANA.Models.Skill", b =>

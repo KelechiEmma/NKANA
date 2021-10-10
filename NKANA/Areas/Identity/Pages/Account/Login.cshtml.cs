@@ -17,13 +17,13 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<NkanaUser> signInManager, 
+        public LoginModel(NkanaSignInManager signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<NkanaUser> userManager)
+            NkanaUserManager userManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

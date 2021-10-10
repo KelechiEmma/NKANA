@@ -1,61 +1,8 @@
-﻿<li class="menu-item-has-children">
-    <a href="javascript:void(0)">Craft</a>
+﻿@model IEnumerable<CategoryVm>
 
-    <ul class="sub-menu">
-        <li><a href="/">Grid Albums</a></li>
-        <li><a href="/">Masonry Albums</a></li>
-        <li><a href="/">Packery Albums</a></li>
-        <li class="menu-item-has-children">
-            <a href="javascript:void(0)">Inside Albums</a>
-
-            <ul class="sub-menu">
-                <li><a href="/">Grid</a></li>
-                <li><a href="/">Masonry</a></li>
-                <li><a href="/">Packery</a></li>
-            </ul>
-        </li>
-    </ul>
-</li>
-
-<li class="menu-item-has-children">
-    <a href="javascript:void(0)">Sculptures</a>
-
-    <ul class="sub-menu">
-        <li><a href="/">Photo Proofing</a></li>
-        <li><a href="/">Grid Gallery</a></li>
-        <li><a href="/">Masonry Gallery</a></li>
-        <li><a href="/">Packery Gallery</a></li>
-        <li><a href="/">Slider Gallery</a></li>
-    </ul>
-</li>
-
-<li class="menu-item-has-children">
-    <a href="javascript:void(0)">Nature</a>
-
-    <ul class="sub-menu">
-        <li><a href="/">Digital Store</a></li>
-        <li><a href="/">About Me</a></li>
-        <li><a href="/">Before / After</a></li>
-    </ul>
-</li>
-
-<li class="menu-item-has-children">
-    <a href="javascript:void(0)">Drawing</a>
-
-    <ul class="sub-menu">
-        <li><a href="/">Grid Blog</a></li>
-        <li><a href="/">Fullwidth Blog</a></li>
-        <li><a href="/">Blog with Right Sidebar</a></li>
-        <li><a href="/">Blog with Left Sidebar</a></li>
-    </ul>
-</li>
-
-<li class="menu-item-has-children">
-    <a href="javascript:void(0)">Paintings</a>
-
-    <ul class="sub-menu">
-        <li><a href="/">Contacts 01</a></li>
-        <li><a href="/">Contacts 02</a></li>
-        <li><a href="/">Contacts 03</a></li>
-    </ul>
-</li>
+@foreach (var cat in Model)
+{
+    <li class="menu-item">
+        <a asp-area="Gallery" asp-controller="Categories" asp-action="Details" asp-route-id="@cat.Id">@cat.Name</a>
+    </li>
+}

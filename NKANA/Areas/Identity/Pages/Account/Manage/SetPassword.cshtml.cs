@@ -11,12 +11,12 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
 
         public SetPasswordModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager)
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

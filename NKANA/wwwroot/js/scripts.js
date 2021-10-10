@@ -25,6 +25,14 @@ $(function() {
     }, 100);
 });
 
+window.deleteItem = function (id) {
+    window.location = window.location + '/Delete/' + id;
+}
+
+window.deleteFromEdit = function (id) {
+    var l = window.location.href
+    window.location = l.replace("Edit", "Delete")
+}
 // Basic confirm box
 $('[data-confirm]').each(function() {
     var me = $(this),
@@ -426,30 +434,67 @@ $("[data-collapse]").each(function() {
 });
 
 // Gallery
-$(".gallery .gallery-item").each(function() {
-    var me = $(this);
+    function initializeGallery() {
+        $(".gallery .gallery-item").each(function () {
+            var me = $(this);
 
-    me.attr('href', me.data('image'));
-    me.attr('title', me.data('title'));
-    if(me.parent().hasClass('gallery-fw')) {
-    me.css({
-        height: me.parent().data('item-height'),
-    });
-    me.find('div').css({
-        lineHeight: me.parent().data('item-height') + 'px'
-    });
+            me.attr('href', me.data('image'));
+            me.attr('title', me.data('title'));
+            if (me.parent().hasClass('gallery-fw')) {
+                me.css({
+                    height: me.parent().data('item-height'),
+                });
+                me.find('div').css({
+                    lineHeight: me.parent().data('item-height') + 'px'
+                });
+            }
+            me.css({
+                backgroundImage: 'url("' + me.data('image') + '")'
+            });
+        });
     }
-    me.css({
-        backgroundImage: 'url("'+ me.data('image') +'")'
-    });
-});
+    initializeGallery()
 if(jQuery().Chocolat) { 
-    $(".gallery").Chocolat({
-        className: 'gallery',
-        imageSelector: '.gallery-item',
-    });
+    //$(".gallery").Chocolat({
+    //    className: 'gallery',
+    //    imageSelector: '.gallery-item',
+    //});
 }
 
+    $(".preview-thumbnail").change(function (e) {
+        var thumbnailPreviewUrl = URL.createObjectURL(e.target.files[0])
+        
+        var body = `<div class="form-group">
+                                <label class="imagecheck mb-4">
+                                    <figure class="imagecheck-figure">
+                                        <img src="${thumbnailPreviewUrl}" alt="Title" class="imagecheck-image">
+                                    </figure>
+                                </label>
+                            </div>`
+        $(this).parent().append(body)
+    })
+    $(".preview-images").change(function (e) {
+        var pre = `<div class="form-group mt-5 prev-body"><div class="row gutters-sm">`, post = `</div></div>`
+        for (var i = 0; i < e.target.files.length; i++) {
+            var thumbnailPreviewUrl = URL.createObjectURL(e.target.files[i])
+
+            var body = `<div class="col-6 col-sm-4 col-md-3">
+                                <label class="imagecheck mb-4">
+                                    <figure class="imagecheck-figure">
+                                        <img src="${thumbnailPreviewUrl}" alt="Title" class="imagecheck-image">
+                                    </figure>
+                                </label>
+                            </div>`
+            pre = pre + body
+        }
+        $("prev-body").remove();
+        $(this).parent().append(pre + post)
+    })
+    $(".artwork").click(function(e) {
+        e.preventDefault()
+        window.location = window.location +"/Edit/" + $(this).data('id')
+    })
+    
 // Background
 $("[data-background]").each(function() {
     var me = $(this);

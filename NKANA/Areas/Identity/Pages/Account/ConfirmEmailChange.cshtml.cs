@@ -14,10 +14,10 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ConfirmEmailChangeModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
 
-        public ConfirmEmailChangeModel(UserManager<NkanaUser> userManager, SignInManager<NkanaUser> signInManager)
+        public ConfirmEmailChangeModel(NkanaUserManager userManager, NkanaSignInManager signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

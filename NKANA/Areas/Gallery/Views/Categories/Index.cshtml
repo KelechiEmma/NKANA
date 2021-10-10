@@ -1,41 +1,44 @@
-﻿@model IEnumerable<NKANA.Models.Category>
+﻿@model IEnumerable<NKANA.ViewModels.CategoryVm>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
+<!-- Content -->
+<div class="aurel_main_wrapper aurel_top_padding_yes aurel_bottom_padding_yes">
+    <div class="aurel_container">
+        <div class="aurel_content_wrapper row aurel_no_sidebar">
+            <div class="aurel_content col col-12">
+                <div class="aurel_tiny">
+                    <div class="row aurel_pf_fullwidth">
+                        <div class="col col-12 aurel_pl_30 aurel_pr_30">
+                            <div class="aurel_widget_pm_albums_grid">
+                                <div class="aurel_widget_container">
+                                    <div class="aurel_front_end_display">
+                                        <div class="aurel_albums_listing_cont aurel_albums_grid aurel_albums_grid4 view_type_grid aurel_isotope_trigger albums_titles_show">
+                                            @foreach (var art in Model)
+                                            {
+                                                <div class="aurel_albums_grid_item columns_4 artcat-@art.Id aurel_isotop_el_loading">
+                                                    <div class="aurel_inner_cont">
+                                                        <a asp-area="Gallery" asp-controller="Categories" asp-action="Details" asp-route-id="@art.Id" class="aurel_dp aurel_no_select">
+                                                            <img src="@art.ThumbnailUrl" alt="@art.Name" />
 
-<h1>Index</h1>
+                                                            <span class="aurel_albums_grid_content">
+                                                                <span class="aurel_albums_title">@art.Name</span>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThumnailImage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThumnailImage)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    </div>
+</div>

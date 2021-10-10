@@ -236,20 +236,29 @@ jQuery(function() {
 });
 
 // Contact Form
-jQuery('#contact_form input[type=submit]').on('click', function () {
-	var this_contact = jQuery(this).parents('form');
-	
-	jQuery.post('mail.php', {
-		send_mail: 'true',
-		form_name: this_contact.find('input[name=your_name]').val(),
-		form_email: this_contact.find('input[name=your_email]').val(),
-		form_text: this_contact.find('textarea[name=your_message]').val()
-	}).done(function (data) {
-		alert(data);
-	});
-
-	return false;
-});
+$("#send_art_inquiry").click(function (e) {
+	e.preventDefault()
+	$(".inquiry_message").remove()
+	$(this).append('<p id="wait_message">Please wait...</p>')
+	var parent = $(this).parent()
+	$.ajax({
+		url: parent.attr("action"),
+		method: "POST",
+		data: parent.serialize(),
+		success: function (res) {
+			$("#wait_message").remove()
+			parent.prepend('<p class="text-success inquiry_message">Thank you. Your message have been received.</p>')
+		},
+		error: function (res) {
+			if (res.status == 401) {
+				parent.prepend('<p class="text-danger inquiry_message">Please login to send your message.</p>')
+			} else {
+				$("#wait_message").remove()
+				parent.prepend('<p class="text-danger inquiry_message">Sorry an error occured processing your message.</p>')
+            }
+		}
+	})
+})
 
 jQuery(document).ready(function () {
 	if (jQuery('.fadeOnLoad').length) {

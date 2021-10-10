@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NKANA.Extensions;
+using NKANA.ViewModels;
 
 namespace NKANA.Areas.Gallery.Components
 {
@@ -18,9 +19,16 @@ namespace NKANA.Areas.Gallery.Components
             _context = context;
         }
 
-        public async Task<IViewComponentResult> InvokeAsync()
+        public IViewComponentResult Invoke()
         {
-            return View(this.GetViewPath("Gallery"));
+            var categories = _context.Categories.Where(x => x.ShowInNavbar == true)
+                .Select(x => new CategoryVm
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                });
+
+            return View(this.GetViewPath("Gallery"), categories);
         }
     }
 }

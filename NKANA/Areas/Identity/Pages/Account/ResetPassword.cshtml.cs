@@ -15,9 +15,9 @@ namespace NKANA.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
+        private readonly NkanaUserManager _userManager;
 
-        public ResetPasswordModel(UserManager<NkanaUser> userManager)
+        public ResetPasswordModel(NkanaUserManager userManager)
         {
             _userManager = userManager;
         }

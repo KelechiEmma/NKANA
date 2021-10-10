@@ -11,13 +11,13 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public class ChangePasswordModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly ILogger<ChangePasswordModel> _logger;
 
         public ChangePasswordModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager,
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager,
             ILogger<ChangePasswordModel> logger)
         {
             _userManager = userManager;

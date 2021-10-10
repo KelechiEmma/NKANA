@@ -1,30 +1,45 @@
-﻿@model NKANA.Models.Category
+﻿@model NKANA.ViewModels.CategoryViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Name;
 }
+<!-- Content -->
+<div class="aurel_main_wrapper aurel_top_padding_yes aurel_bottom_padding_yes">
+    <div class="aurel_container">
+        <div class="aurel_content_wrapper row aurel_no_sidebar">
+            <div class="aurel_content col col-12">
+                <div class="aurel_tiny">
+                    <div class="row aurel_pf_fullwidth">
+                        <div class="col col-12 aurel_pl_30 aurel_pr_30">
+                            <div class="aurel_widget_pm_albums_grid">
+                                <div class="aurel_widget_container">
+                                    <div class="aurel_front_end_display">
+                                        <div class="aurel_albums_listing_cont aurel_albums_grid aurel_albums_grid4 view_type_grid aurel_isotope_trigger albums_titles_show">
+                                            @foreach (var art in Model.ArtWorks)
+                                            {
+                                                <div class="aurel_albums_grid_item columns_4 artcat-@art.Id aurel_isotop_el_loading">
+                                                    <div class="aurel_inner_cont">
+                                                        <a asp-area="Gallery" asp-controller="ArtWorks" asp-action="Details" asp-route-id="@art.Id" class="aurel_dp aurel_no_select">
+                                                            <img src="@art.ThumbnailUrl" alt="@art.Title" />
 
-<h1>Details</h1>
+                                                            <span class="aurel_albums_grid_content">
+                                                                <span class="aurel_albums_category">@art.Artist</span>
+                                                                <span class="aurel_albums_title">@art.Title</span>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<div>
-    <h4>Category</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ThumnailImage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ThumnailImage)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    </div>
 </div>

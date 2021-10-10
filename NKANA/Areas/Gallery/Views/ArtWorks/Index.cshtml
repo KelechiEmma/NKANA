@@ -1,14 +1,9 @@
-﻿@model IEnumerable<NKANA.Models.ArtWork>
+﻿@model IEnumerable<NKANA.ViewModels.ArtWorkSnapshot>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Art Gallery";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,13 +14,7 @@
                 @Html.DisplayNameFor(model => model.Artist)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThumnailImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
+                @Html.DisplayNameFor(model => model.ThumbnailUrl)
             </th>
             <th></th>
         </tr>
@@ -37,16 +26,10 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Artist.Id)
+                @Html.DisplayFor(modelItem => item.Artist)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThumnailImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+                @Html.DisplayFor(modelItem => item.ThumbnailUrl)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

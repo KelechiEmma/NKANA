@@ -15,13 +15,13 @@ namespace NKANA.Areas.Identity.Pages.Account.Manage
 {
     public partial class EmailModel : PageModel
     {
-        private readonly UserManager<NkanaUser> _userManager;
-        private readonly SignInManager<NkanaUser> _signInManager;
+        private readonly NkanaUserManager _userManager;
+        private readonly NkanaSignInManager _signInManager;
         private readonly IEmailSender _emailSender;
 
         public EmailModel(
-            UserManager<NkanaUser> userManager,
-            SignInManager<NkanaUser> signInManager,
+            NkanaUserManager userManager,
+            NkanaSignInManager signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;

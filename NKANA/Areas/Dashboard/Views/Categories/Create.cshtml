@@ -1,37 +1,57 @@
 ﻿@model NKANA.Models.Category
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Category";
 }
 
-<h1>Create</h1>
-
-<h4>Category</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ThumnailImage" class="control-label"></label>
-                <input asp-for="ThumnailImage" class="form-control" />
-                <span asp-validation-for="ThumnailImage" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<section class="section">
+    <div class="section-header">
+        <h1>Categories</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+            <div class="breadcrumb-item"><a href="#">Categories</a></div>
+            <div class="breadcrumb-item">Create</div>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="section-body">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Add Category</h4>
+                    </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form asp-area="Dashboard" asp-controller="Categories" asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            <div class="text-danger" asp-validation-summary="All"> </div>
+                            <div class="form-group">
+                                <label asp-for="Name"></label>
+                                <input asp-for="Name" class="form-control">
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check-inline">
+                                    <input class="form-check-input" type="checkbox" asp-for="ShowInNavbar">
+                                    <label class="form-check-label" asp-for="ShowInNavbar">Show in navbar</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="ThumnailImage">Thumbnail</label>
+                                <input type="file" asp-for="ThumnailImage" class="form-control">
+                            </div>
+                        </div>
+                        <div class="card-footer text-right">
+                            <button class="btn btn-primary mr-1" type="submit">Create</button>
+                            <a class="btn btn-secondary" asp-action="Index">Cancel</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

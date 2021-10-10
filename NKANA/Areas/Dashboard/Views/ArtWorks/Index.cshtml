@@ -1,59 +1,48 @@
-﻿@model IEnumerable<NKANA.Models.ArtWork>
+﻿@model IEnumerable<NKANA.ViewModels.ArtWorkListVm>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Artworks";
 }
 
-<h1>Index</h1>
+<section class="section">
+    <div class="section-header">
+        <h1>Artworks</h1>
+        <div class="section-header-breadcrumb">
+            <div class="breadcrumb-item active"><a href="javascript(0):void;">Dashboard</a></div>
+            <div class="breadcrumb-item"><a href="javascript(0):void;">Artworks</a></div>
+            <div class="breadcrumb-item">Gallery</div>
+        </div>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Artist)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThumnailImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Artist.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThumnailImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-lg-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Gallery</h4>
+                        <div class="card-header-action">
+                            <a asp-action="Create" class="btn btn-primary">Add New</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="row gutters-sm">
+                                @foreach (var item in Model)
+                                {
+                                    <div class="col-6 col-sm-4 col-md-3">
+                                        <label class="imagecheck mb-4 artwork" data-id="@item.Id">
+                                            <figure class="imagecheck-figure">
+                                                <img src="@item.ThumbnailUrl" alt="@item.Title" class="imagecheck-image">
+                                            </figure>
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
