@@ -24,14 +24,6 @@ namespace NKANA.Areas.Dashboard.Controllers
             _context = context;
         }
 
-        // GET: Dashboard/Artists
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.Artists.ToListAsync());
-        //}
-
-        // GET: Dashboard/Artists
-        //[HttpPost]
         public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
             ps ??= 50;

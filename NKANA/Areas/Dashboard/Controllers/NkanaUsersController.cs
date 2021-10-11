@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.Services;
 using NKANA.ViewModels;
 
 namespace NKANA.Areas.Dashboard.Controllers
@@ -32,9 +33,19 @@ namespace NKANA.Areas.Dashboard.Controllers
 
         // GET: Dashboard/NkanaUsers
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
-            return View(await _context.Users.ToListAsync());
+            ps ??= 50;
+            p ??= 1;
+
+            PaginatedList<NkanaUser> list = new PaginatedList<NkanaUser>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                list = await PaginatedList<NkanaUser>.CreateAsync(_context.Users.AsNoTracking().ToList().Where(x => x.UserName.Contains(q, StringComparison.CurrentCultureIgnoreCase)), p.Value, ps.Value);
+                return View(list);
+            }
+            list = await PaginatedList<NkanaUser>.CreateAsync(await _context.Users.ToListAsync(), p.Value, ps.Value);
+            return View(list);
         }
 
         // GET: Dashboard/NkanaUsers/Details/5

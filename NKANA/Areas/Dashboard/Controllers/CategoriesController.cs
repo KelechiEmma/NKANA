@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.Services;
 using static System.Net.WebRequestMethods;
 
 namespace NKANA.Areas.Dashboard.Controllers
@@ -30,9 +31,19 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/Categories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
-            return View(await _context.Categories.ToListAsync());
+            ps ??= 50;
+            p ??= 1;
+
+            PaginatedList<Category> list = new PaginatedList<Category>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                list = await PaginatedList<Category>.CreateAsync(_context.Categories.AsNoTracking().ToList().Where(x => x.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)), p.Value, ps.Value);
+                return View(list);
+            }
+            list = await PaginatedList<Category>.CreateAsync(await _context.Categories.ToListAsync(), p.Value, ps.Value);
+            return View(list);
         }
 
         // GET: Dashboard/Categories/Details/5
