@@ -1,7 +1,10 @@
-﻿@model IEnumerable<NKANA.ViewModels.ArtWorkInquiryListVm>
+﻿@using NKANA.Services
+@model PaginatedList<NKANA.ViewModels.ArtWorkInquiryListVm>
 
 @{
     ViewData["Title"] = "Artwork Inquiries";
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "active";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "active";
 }
 
 <section class="section">
@@ -13,34 +16,43 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Inquiries</h4>
+                    <form asp-area="Dashboard" asp-controller="Messages" asp-action="Index" method="post" class="card-header-form">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-icon"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-striped mb-0">
                             <thead>
                                 <tr>
-                                    <th> @Html.DisplayNameFor(model => model.Title)</th>
-                                    <th> @Html.DisplayNameFor(model => model.ArtWork)</th>
-                                    <th> @Html.DisplayNameFor(model => model.User)</th>
-                                    <th> @Html.DisplayNameFor(model => model.IsRead)</th>
-                                    <th> @Html.DisplayNameFor(model => model.RequestDate)</th>
+                                    <th>S/N</th>
+                                    <th>Title</th>
+                                    <th>ArtWork</th>
+                                    <th> User</th>
+                                    <th>Is Read</th>
+                                    <th>Request Date</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @for (int i = 0; i < Model.Count; i++)
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Title)
+                                            @Html.DisplayFor(modelItem => Model[i].Title)
                                             <div class="table-links">
                                                 <div class="bullet"></div>
-                                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                                                <a asp-action="Details" asp-route-id="@Model[i].Id">Details</a>
                                             </div>
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.ArtWork)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.User)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].ArtWork)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].User)</td>
                                         <td>
-                                            @if (item.IsRead)
+                                            @if (Model[i].IsRead)
                                             {
                                                 <span class="badge badge-pill badge-success mb-1 float-right">Read</span>
                                             }
@@ -49,11 +61,24 @@
                                                 <span class="badge badge-pill badge-warning mb-1 float-right">Unread</span>
                                             }
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.RequestDate)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].RequestDate)</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
+                        <nav aria-label="...">
+                            <a href="#">Total Pages @Model.TotalPages</a>&nbsp; &nbsp;
+                            <a href="#">Total Items @Model.TotalItems</a>
+                            <ul class="pagination text-right">
+                                <li class="page-item @prevDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+                                </li>
+
+                                <li class="page-item @nextDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex + 1)">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

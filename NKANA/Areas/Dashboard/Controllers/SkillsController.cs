@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.Services;
+using NKANA.ViewModels;
 
 namespace NKANA.Areas.Dashboard.Controllers
 {
@@ -24,9 +26,19 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/Skills
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
-            return View(await _context.Skills.ToListAsync());
+            ps ??= 50;
+            p ??= 1;
+
+            PaginatedList<Skill> list = new PaginatedList<Skill>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                list = await PaginatedList<Skill>.CreateAsync(_context.Skills.AsNoTracking().ToList().Where(x => x.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)), p.Value, ps.Value);
+                return View(list);
+            }
+            list = await PaginatedList<Skill>.CreateAsync(await _context.Skills.ToListAsync(), p.Value, ps.Value);
+            return View(list);
         }
 
         // GET: Dashboard/Skills/Details/5

@@ -1,7 +1,10 @@
-﻿@model IEnumerable<NKANA.Models.NkanaUser>
+﻿@using NKANA.Services
+@model PaginatedList<NKANA.Models.NkanaUser>
 
 @{
     ViewData["Title"] = "Users";
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "active";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "active";
 }
 
 <section class="section">
@@ -13,6 +16,14 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Users</h4>
+                    <form asp-area="Dashboard" asp-controller="NkanaUsers" asp-action="Index" method="post" class="card-header-form">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search">
+                            <div class="input-group-btn">
+                                <button class="btn btn-primary btn-icon"><i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
                     <div class="card-header-action">
                         <a asp-action="Create" class="btn btn-primary">Add New</a>
                     </div>
@@ -22,32 +33,33 @@
                         <table class="table table-striped mb-0">
                             <thead>
                                 <tr>
-                                    <th> @Html.DisplayNameFor(model => model.UserName)</th>
-                                    <th> @Html.DisplayNameFor(model => model.FirstName)</th>
-                                    <th> @Html.DisplayNameFor(model => model.Email)</th>
-                                    <th> @Html.DisplayNameFor(model => model.EmailConfirmed)</th>
-                                    <th> @Html.DisplayNameFor(model => model.PhoneNumber)</th>
-                                    <th> @Html.DisplayNameFor(model => model.AccessFailedCount)</th>
-                                    <th> @Html.DisplayNameFor(model => model.LockoutEnabled)</th>
-                                    <th> @Html.DisplayNameFor(model => model.LockoutEnd)</th>
+                                    <th>S/N</th>
+                                    <th> Username</th>
+                                    <th>First Name</th>
+                                    <th>Email</th>
+                                    <th>Email Confirmed</th>
+                                    <th> Phone Number</th>
+                                    <th>Access Failed Count</th>
+                                    <th> Lockout Enabled</th>
+                                    <th> Lockout End</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @for (int i = 0; i < Model.Count; i++)
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.UserName)
+                                            @Html.DisplayFor(modelItem => Model[i].UserName)
                                             <div class="table-links">
                                                 <div class="bullet"></div>
-                                                <a asp-action="Details" asp-route-id="@item.Id">View</a>
+                                                <a asp-action="Details" asp-route-id="@Model[i].Id">View</a>
                                             </div>
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.FirstName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].FirstName)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].Email)</td>
                                         <td>
-                                            @if (item.EmailConfirmed)
+                                            @if (Model[i].EmailConfirmed)
                                             {
                                                 <span class="badge badge-pill badge-success mb-1 float-right">Confirmied</span>
                                             }
@@ -56,12 +68,12 @@
                                                 <span class="badge badge-pill badge-danger mb-1 float-right">NIL</span>
                                             }
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].PhoneNumber)</td>
                                         <td>
-                                            <span class="badge badge-pill badge-warning mb-1 float-right">@Html.DisplayFor(modelItem => item.AccessFailedCount)</span>
+                                            <span class="badge badge-pill badge-warning mb-1 float-right">@Html.DisplayFor(modelItem => Model[i].AccessFailedCount)</span>
                                         </td>
                                         <td>
-                                            @if (item.LockoutEnabled)
+                                            @if (Model[i].LockoutEnabled)
                                             {
                                                 <span class="badge badge-pill badge-success mb-1 float-right">Active</span>
                                             }
@@ -70,15 +82,28 @@
                                                 <span class="badge badge-pill badge-danger mb-1 float-right">Locked</span>
                                             }
                                         </td>
-                                        <td>@Html.DisplayFor(modelItem => item.LockoutEnd)</td>
+                                        <td>@Html.DisplayFor(modelItem => Model[i].LockoutEnd)</td>
                                         <td>
-                                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                            <a class="btn btn-danger btn-action" data-toggle="tooltip" asp-action="Delete" asp-route-id="@item.Id" title="Delete" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="deleteItem(@item.Id)"><i class="fas fa-trash"></i></a>
+                                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" asp-action="Edit" asp-route-id="@Model[i].Id" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                            <a class="btn btn-danger btn-action" data-toggle="tooltip" asp-action="Delete" asp-route-id="@Model[i].Id" title="Delete" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="deleteItem(@Model[i].Id)"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
+                        <nav aria-label="...">
+                            <a href="#">Total Pages @Model.TotalPages</a>&nbsp; &nbsp;
+                            <a href="#">Total Items @Model.TotalItems</a>
+                            <ul class="pagination text-right">
+                                <li class="page-item @prevDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+                                </li>
+
+                                <li class="page-item @nextDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex + 1)">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

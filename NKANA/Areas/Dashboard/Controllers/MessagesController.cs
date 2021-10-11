@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.Services;
 using NKANA.ViewModels;
 
 namespace NKANA.Areas.Dashboard.Controllers
@@ -24,9 +25,15 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/ArtistSkills
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
-            var model = _context.ArtWorkRequests.Include(a => a.User)
+            ps ??= 50;
+            p ??= 1;
+
+            PaginatedList<ArtWorkInquiryListVm> list = new PaginatedList<ArtWorkInquiryListVm>();
+            if (!string.IsNullOrEmpty(q))
+            {
+                list = await PaginatedList<ArtWorkInquiryListVm>.CreateAsync(_context.ArtWorkRequests.Include(a => a.User)
                 .Include(a => a.ArtWork)
                 .Select(x => new ArtWorkInquiryListVm
                 {
@@ -37,9 +44,22 @@ namespace NKANA.Areas.Dashboard.Controllers
                     RequestDate = x.RequestDate.ToLocalTime().ToString(),
                     Title = x.Title,
                     User = x.User.UserName
-                });
-            
-            return View(model);
+                }).ToList().Where(x => x.ArtWork.Contains(q, StringComparison.CurrentCultureIgnoreCase) ||
+                x.Title.Contains(q, StringComparison.CurrentCultureIgnoreCase) ||
+                x.User.Contains(q, StringComparison.CurrentCultureIgnoreCase)), p.Value, ps.Value);
+                return View(list);
+            }
+            list = await PaginatedList<ArtWorkInquiryListVm>.CreateAsync((await _context.ArtWorkRequests.ToListAsync()).Select(x => new ArtWorkInquiryListVm
+            {
+                ArtWork = x.ArtWork.Title,
+                ArtWorkId = x.ArtWorkId,
+                Id = x.Id,
+                IsRead = false,
+                RequestDate = x.RequestDate.ToString(),
+                Title = x.ArtWork.Title,
+                User = x.User.UserName
+            }), p.Value, ps.Value);
+            return View(list);
         }
 
         // GET: Dashboard/ArtistSkills/Details/5
