@@ -35,8 +35,9 @@ namespace NKANA
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddIdentity<NkanaUser, NkanaRole>(options => {
-                
+            services.AddIdentity<NkanaUser, NkanaRole>(options =>
+            {
+
                 options.SignIn.RequireConfirmedAccount = true;
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -46,7 +47,9 @@ namespace NKANA
                 .AddUserManager<NkanaUserManager>()
                 .AddRoleManager<NkanaRoleManager>()
                 .AddSignInManager<NkanaSignInManager>()
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+                
 
             services.ConfigureApplicationCookie(x =>
             {

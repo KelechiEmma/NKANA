@@ -2,10 +2,11 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+using NKANA.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System.Text.Encodings.Web;
 
 namespace NKANA.Areas.Identity.Pages.Account
 {
@@ -42,17 +43,20 @@ namespace NKANA.Areas.Identity.Pages.Account
 
             Email = email;
             // Once you add a real email sender, you should remove this code that lets you confirm the account
-            DisplayConfirmAccountLink = true;
+            //DisplayConfirmAccountLink = true;
             if (DisplayConfirmAccountLink)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
                 var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                
                 EmailConfirmationUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
+
+                await _sender.SendEmailAsync(new EmailMessage(new string[] { Email }, "Complete account registration", $"<a href='{HtmlEncoder.Default.Encode(EmailConfirmationUrl)}'>Click on this link to confirm your account </a>."));
             }
 
             return Page();
