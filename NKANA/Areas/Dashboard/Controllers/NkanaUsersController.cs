@@ -32,7 +32,6 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/NkanaUsers
-        [HttpGet]
         public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
             ps ??= 50;

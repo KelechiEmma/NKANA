@@ -15,7 +15,7 @@ using NKANA.ViewModels;
 namespace NKANA.Areas.Dashboard.Controllers
 {
     [Area("Dashboard")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class SkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
