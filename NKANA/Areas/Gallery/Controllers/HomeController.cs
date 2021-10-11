@@ -31,6 +31,7 @@ namespace NKANA.Areas.Gallery.Controllers
             var categories = _context.ArtWorkCategories
                 .Include(x => x.ArtWork).ThenInclude(x => x.Artist)
                 .Include(x => x.Category).ToList()
+                .OrderBy(x => x.Id).Take(5)
                 .GroupBy(x => new { x.ArtWorkId }).Select(y => y.First());
 
             var arGr = categories.GroupBy(x => new { x.CategoryId });
@@ -39,7 +40,7 @@ namespace NKANA.Areas.Gallery.Controllers
                 model.ArtWorkGroups.Add(new CategoryViewModel
                 {
                     ArtWorks = group
-                    .OrderBy(x => x.ArtWork.DateCreated).Take(12)
+                    .OrderBy(x => x.ArtWork.DateCreated).Take(10)
                     .Select(x => new ArtWorkSnapshot
                     {
                         Artist = x.ArtWork.Artist.Name,
@@ -62,11 +63,6 @@ namespace NKANA.Areas.Gallery.Controllers
                 }).ToList();
 
             return View(model);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

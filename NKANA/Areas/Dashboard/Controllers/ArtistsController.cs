@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NKANA.Data;
 using NKANA.Models;
+using NKANA.Services;
 using NKANA.ViewModels;
 
 namespace NKANA.Areas.Dashboard.Controllers
@@ -24,20 +25,26 @@ namespace NKANA.Areas.Dashboard.Controllers
         }
 
         // GET: Dashboard/Artists
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Artists.ToListAsync());
-        }
+        //public async Task<IActionResult> Index()
+        //{
+        //    return View(await _context.Artists.ToListAsync());
+        //}
 
         // GET: Dashboard/Artists
-        [HttpPost]
-        public async Task<IActionResult> Index(string q)
+        //[HttpPost]
+        public async Task<IActionResult> Index(string q, int? p, int? ps)
         {
+            ps ??= 50;
+            p ??= 1;
+
+            PaginatedList<Artist> list = new PaginatedList<Artist>();
             if (!string.IsNullOrEmpty(q))
             {
-                return View(_context.Artists.AsNoTracking().Where(x => x.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)));
+                list = await PaginatedList<Artist>.CreateAsync(_context.Artists.AsNoTracking().ToList().Where(x => x.Name.Contains(q, StringComparison.CurrentCultureIgnoreCase)), p.Value, ps.Value);
+                return View(list);
             }
-            return View(await _context.Artists.ToListAsync());
+            list = await PaginatedList<Artist>.CreateAsync(await _context.Artists.ToListAsync(), p.Value, ps.Value);
+            return View(list);
         }
 
         // GET: Dashboard/Artists/Details/5
