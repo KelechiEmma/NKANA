@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NKANA.Data;
 using Microsoft.AspNetCore.Http;
+using NKANA.Services;
 
 namespace NKANA
 {
@@ -28,6 +29,7 @@ namespace NKANA
                 o.EnableEndpointRouting = false;
             });
 
+            services.AddScoped<IEmailSender, EmailSender>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

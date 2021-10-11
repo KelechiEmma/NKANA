@@ -1,7 +1,10 @@
-﻿@model IEnumerable<NKANA.Models.Artist>
+﻿@using NKANA.Services
+@model PaginatedList<NKANA.Models.Artist>
 
 @{
     ViewData["Title"] = "Artists";
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "active";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "active";
 }
 
 <section class="section">
@@ -30,33 +33,48 @@
                         <table class="table table-striped mb-0">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateEnrolled)</th>
+                                    <th>S/N</th>
+                                    <th>Artist</th>
+                                    <th>Date Enrolled</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @for (int i = 0; i < Model.Count; i++)
                                 {
                                     <tr>
+                                        <td>@(i + 1)</td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Name)
+                                            @Html.DisplayFor(modelItem => Model[i].Name)
                                             <div class="table-links">
                                                 <div class="bullet"></div>
-                                                <a asp-action="Details" asp-route-id="@item.Id">View</a>
+                                                <a asp-action="Details" asp-route-id="@Model[i].Id">View</a>
                                             </div>
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.DateEnrolled)
+                                            @Html.DisplayFor(modelItem => Model[i].DateEnrolled)
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" asp-action="Edit" asp-route-id="@item.Id" title="Edit"><i class="fas fa-pencil-alt"></i></a>
-                                            <a class="btn btn-danger btn-action" data-toggle="tooltip" asp-action="Delete" asp-route-id="@item.Id" title="Delete" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="deleteItem(@item.Id)"><i class="fas fa-trash"></i></a>
+                                            <a class="btn btn-primary btn-action mr-1" data-toggle="tooltip" asp-action="Edit" asp-route-id="@Model[i].Id" title="Edit"><i class="fas fa-pencil-alt"></i></a>
+                                            <a class="btn btn-danger btn-action" data-toggle="tooltip" asp-action="Delete" asp-route-id="@Model[i].Id" title="Delete" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="deleteItem(@Model[i].Id)"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
+                        <nav aria-label="...">
+                            <a href="#">Total Pages @Model.TotalPages</a>&nbsp; &nbsp; 
+                            <a href="#">Total Items @Model.TotalItems</a>
+                            <ul class="pagination text-right">
+                                <li class="page-item @prevDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+                                </li>
+
+                                <li class="page-item @nextDisabled">
+                                    <a class="page-link" asp-action="Index" asp-route-p="@(Model.PageIndex + 1)">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>

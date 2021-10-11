@@ -55,7 +55,7 @@ namespace NKANA.Areas.Gallery.Controllers
                     Id = x.ArtWorkId,
                     Artist = x.ArtWork.Artist.Name,
                     ThumbnailUrl = x.ArtWork.ThumnailImage,
-                    Title = x.ArtWork.ThumnailImage
+                    Title = x.ArtWork.Title
                 }).ToList();
 
             var model = new CategoryViewModel
