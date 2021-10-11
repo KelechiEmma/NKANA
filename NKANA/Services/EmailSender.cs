@@ -145,7 +145,7 @@ namespace NKANA.Services
 
                     client.Connect(_emailConfig.SmtpServer, _emailConfig.SmtpPort, false);
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    client.Authenticate(username, password);
+                    //client.Authenticate(username, password);
 
                     await client.SendAsync(mailMessage);
                     _logger.LogInformation($"Email sent from {mailMessage.From} to {mailMessage.To}.");
