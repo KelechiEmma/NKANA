@@ -5,8 +5,22 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
 
+<div class="aurel_main_wrapper aurel_top_padding_no aurel_bottom_padding_no">
+    <div class="aurel_content col col-12">
+        <!-- Row -->
+        <div class="row aurel_js_bg_image aurel_js_min_height aurel_bg_center_center aurel_bg_size_cover aurel_pf_fullwidth aurel_mb_50" data-src="img/clipart/back_14.jpg" data-min-height="650">
+            <div class="col col-12 push-middle">
+                <div class="aurel_text_align_center aurel_mb_80">
+
+
+                    <h1 class="page-title">@ViewData["Title"]</h1>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

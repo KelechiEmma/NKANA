@@ -4,18 +4,32 @@
     ViewData["Title"] = "Log out";
 }
 
-<header>
-    <h1>@ViewData["Title"]</h1>
-    @{
-        if (User.Identity.IsAuthenticated)
-        {
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
-            </form>
-        }
-        else
-        {
-            <p>You have successfully logged out of the application.</p>
-        }
-    }
-</header>
+
+<div class="aurel_main_wrapper aurel_top_padding_no aurel_bottom_padding_no">
+    <div class="aurel_content col col-12">
+        <!-- Row -->
+        <div class="row aurel_js_bg_image aurel_js_min_height aurel_bg_center_center aurel_bg_size_cover aurel_pf_fullwidth aurel_mb_50" data-src="img/clipart/back_14.jpg" data-min-height="650">
+            <div class="col col-12 push-middle">
+                <div class="aurel_text_align_center aurel_mb_80">
+
+
+                    <header>
+                        <h1>@ViewData["Title"]</h1>
+                        @{
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>You have successfully logged out of the application.</p>
+                            }
+                        }
+                    </header>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
