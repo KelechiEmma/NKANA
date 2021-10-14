@@ -7963,7 +7963,6 @@ body .gm-style .gm-style-mtc div {
 	.aurel_albums_grid1 .aurel_albums_grid_item,
 	.aurel_albums_grid2 .aurel_albums_grid_item,
 	.aurel_albums_grid3 .aurel_albums_grid_item,
-	/*.aurel_albums_grid4 .aurel_albums_grid_item,*/
 	.aurel_albums_grid5 .aurel_albums_grid_item,
 	.aurel_albums_grid6 .aurel_albums_grid_item {
 		width: 100%;
@@ -8206,7 +8205,7 @@ body .gm-style .gm-style-mtc div {
 	}
 
 	.aurel_main_wrapper {
-		padding: 33px 0 30px 0;
+		margin-top: 100px;
 	}
 	.has_admin_bar .fixed_header_footer header.aurel_main_header {
 		top: 0;
@@ -8297,8 +8296,24 @@ body .gm-style .gm-style-mtc div {
 	}
 }
 
-@media only screen and (min-width: 400px) and (max-width: 420px) {
-	
+@media only screen and (min-width: 320px) and (max-width: 760px) {
+
+	.aurel_albums_grid4 .aurel_albums_grid_item {
+		width: 50%;
+	}
+	.aurel_albums_grid.view_type_grid .aurel_albums_grid_content .aurel_albums_category {
+		display: none;
+		font-size: 10px;
+		line-height: 18px;
+		text-transform: uppercase;
+		margin-bottom: 6px;
+	}
+
+	.aurel_albums_grid.view_type_grid .aurel_albums_grid_content .aurel_albums_title {
+		display: block;
+		font-size: 18px;
+		line-height: 20px;
+	}
 }
 
 @media only screen and (max-width: 737px) {
