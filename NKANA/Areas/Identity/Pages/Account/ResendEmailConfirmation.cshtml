@@ -7,7 +7,7 @@
 
 <div class="aurel_main_wrapper">
     <div class="aurel_container">
-        <div class="aurel_content_wrapper row aurel_right_sidebar">
+        <div class="aurel_content_wrapper row aurel_left_sidebar">
 
             <!-- Content Container -->
             <div class="aurel_content col9">
@@ -15,10 +15,6 @@
                     <!-- Title -->
                     <h1 class="page-title">@ViewData["Title"]</h1>
 
-
-
-
-                    @*<h1>@ViewData["Title"]</h1>*@
                     <h4>Enter your email.</h4>
                     <hr />
                     <div class="row">
@@ -35,11 +31,12 @@
                         </div>
                     </div>
 
-                    @section Scripts {
-                        <partial name="_ValidationScriptsPartial" />
-                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -276,6 +276,12 @@ form {
 	margin: 0;
 }
 
+	form label {
+		color: #d0d0d0
+	}
+	form span.text-danger.field-validation-error{
+		color: #f10000;
+	}
 .aurel_button,
 .aurel_widget_button a.aurel-button,
 input[type="button"],
@@ -300,7 +306,7 @@ body textarea {
 	vertical-align: top;
 	padding: 14px 19px 16px 19px;
 	background: transparent;
-	border: none;
+	border: 2px solid #d0d0d0 !important;
 	border-radius: 0;
 	width: 100%;
 	font-size: 13px;
