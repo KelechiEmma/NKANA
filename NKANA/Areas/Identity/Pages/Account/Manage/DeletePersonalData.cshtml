@@ -5,29 +5,42 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
+<div class="aurel_main_wrapper">
+    <div class="aurel_container">
+        <div class="aurel_content_wrapper row aurel_right_sidebar">
+            <!-- Content Container -->
+            <div class="aurel_content col9">
+                <div class="aurel_tiny">
+                    <!-- Title -->
+                    <h1 class="page-title">@ViewData["Title"]</h1>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-    </p>
-</div>
+                    <div class="alert alert-warning" role="alert" >
+                        <p style="font-size:large;">
+                            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+                        </p>
+                    </div>
 
-<div>
-    <form id="delete-user" method="post" class="form-group">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        @if (Model.RequirePassword)
-        {
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <div>
+                        <form id="delete-user" method="post" class="form-group aurel_sm_mb_25">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            @if (Model.RequirePassword)
+                            {
+                                <div class="form-group">
+                                    <label asp-for="Input.Password"></label>
+                                    <input asp-for="Input.Password" class="form-control" placeholder="Password" form="delete-user" size="40" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                            }
+                            <div><input type="submit" value="Delete data and close my account"> </div>
+                        </form>
+                    </div>
+
+                    @section Scripts {
+                        <partial name="_ValidationScriptsPartial" />
+                    }
+
+                </div>
             </div>
-        }
-        <button class="btn btn-danger" type="submit">Delete data and close my account</button>
-    </form>
+        </div>
+    </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
